@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.choerodon.com.cn/choerodon/example-service
+  repository: registry.cn-hangzhou.aliyuncs.com/{{group.name}}/{{service.code}}
 
 preJob:
   preConfig:
