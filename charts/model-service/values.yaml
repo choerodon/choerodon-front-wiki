@@ -18,6 +18,7 @@ preJob:
 
 service:
   enable: false
+  port: 80
 
 ingress:
   enable: false
