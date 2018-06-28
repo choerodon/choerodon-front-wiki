@@ -18,6 +18,7 @@ preJob:
 
 service:
   enable: false
+  type: ClusterIP
   port: 80
 
 ingress:
