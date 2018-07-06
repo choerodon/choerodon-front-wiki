@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 class Hello extends Component {
   render() {
     return (
-      <div>{'Hello, it is a demo!'}</div>
+      <div>{'Hello, it is an organization knowledge!'}</div>
     );
   }
 }

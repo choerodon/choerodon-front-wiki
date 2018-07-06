@@ -1,0 +1,22 @@
+"rentsetting": # 此处为最外层的模块服务字段
+  icon: apps # 服务的图标
+  sort: 1
+  organization: # 组织层的菜单
+    - "wiki-management": # 菜单字段
+        icon: manage_organization  # 菜单图标
+        Routes: /wiki/organization/hello # 菜单对应路由
+        sort: 1 # 菜单的次序
+        permission: # 菜单内容具有的权限
+          - 'devops-service.application-template.listByOrgId'
+"prosetting": # 此处为最外层的模块服务字段
+  icon: apps # 服务的图标
+  sort: 1
+  project:
+    - "wiki-management":
+        icon: apps
+        Routes: /wiki/project/hello 
+        sort: 1
+        permission:
+          - 'devops-service.git-flow.listByAppId'
+  # site: # site层的菜单
+  # user: # 个人中心层的菜单
