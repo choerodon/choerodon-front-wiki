@@ -35,7 +35,7 @@ class WikiSettingHome extends Component {
 
   componentDidMount() {
     this.loadComponents();
-    window.console.log(AppState.currentMenuType.organizationId);
+    window.console.log(AppState.currentMenuType);
   }
 
   showComponent(record) {
@@ -130,10 +130,10 @@ class WikiSettingHome extends Component {
     return (
       <Page className="c7n-wiki">
         <Header title="wiki管理">
-          <Button funcTyp="flat" onClick={() => this.syncInfo()}>
+          {/*<Button funcTyp="flat" onClick={() => this.syncInfo()}>
             <Icon type="autorenew icon" />
             <span>同步信息</span>
-          </Button>
+          </Button>*/}
           <Button funcTyp="flat" onClick={() => this.setState({ createComponentShow: true })}>
             <Icon type="playlist_add icon" />
             <span>创建空间</span>

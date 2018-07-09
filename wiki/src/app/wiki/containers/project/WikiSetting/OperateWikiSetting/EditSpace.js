@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message } from 'choerodon-ui';
-import { Content, stores } from 'choerodon-front-boot';
-// import UserHead from '../../../../components/UserHead';
-// import { getUsers, getUser } from '../../../../api/CommonApi';
-// import { loadComponent, updateComponent } from '../../../../api/ComponentApi';
+import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
+import { Content, stores, axios } from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
 const { Sidebar } = Modal;
@@ -11,6 +8,17 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { AppState } = stores;
 const FormItem = Form.Item;
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 100 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 10 },
+  },
+};
+const inputWidth = 512;
 
 class EditSpace extends Component {
   constructor(props) {
@@ -29,33 +37,22 @@ class EditSpace extends Component {
   }
 
   componentDidMount() {
-    this.loadComponent(this.props.componentId);
+    this.loadComponent(this.props.id);
   }
 
   loadComponent(componentId) {
-    loadComponent(componentId)
+    // loadComponent(componentId)
+    axios.get("url")
       .then((res) => {
-        const { defaultAssigneeRole, description, managerId, name } = res;
+        const { icon, description, path, name } = res;
         this.setState({
-          defaultAssigneeRole,
+          icon,
           description,
-          managerId: managerId || undefined,
+          path,
           name,
           component: res,
         });
-        if (managerId) {
-          this.loadUser(managerId);
-        }
       });
-  }
-
-  loadUser(managerId) {
-    getUser(managerId).then((res) => {
-      this.setState({
-        managerId: JSON.stringify(res.content[0]),
-        originUsers: [res.content[0]],
-      });
-    });
   }
 
   handleOk(e) {
@@ -83,7 +80,7 @@ class EditSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('修改模块失败');
+            message.error('修改空间失败');
           });
       }
     });
@@ -94,7 +91,7 @@ class EditSpace extends Component {
     return (
       <Sidebar
         title="查看空间"
-        onText="修改"
+        okText="修改"
         cancelText="取消"
         visible={this.props.visible || false}
         confirmLoading={this.state.createLoading}
@@ -107,80 +104,38 @@ class EditSpace extends Component {
             width: 512,
           }}
           title={`在项目"${AppState.currentMenuType.name}"中查看空间`}
-          description="你可以修改空间的图标或描述。"
+          description="你可以修改空间的图标和描述。"
         >
           <Form>
-            <FormItem>
-              {getFieldDecorator('name', {
-                initialValue: this.state.name,
+            <FormItem
+              {...formItemLayout}
+            >
+              {getFieldDecorator('icon', {
+                initialValue: this.state.icon,
                 rules: [{
                   required: true,
-                  message: '模块名称必须',
+                  message: '空间图标必填'
                 }],
+                validateTrigger: 'onChange'
               })(
-                <Input label="模块名称" maxLength={30} />,
-              )}
+                <IconSelect
+                  label="空间图标"
+                  style={{ width: inputWidth }}
+                />
+                )}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('managerId', {
-                initialValue: this.state.managerId,
+              {getFieldDecorator('name', {
+                initialValue: this.state.name
               })(
-                <Select
-                  label="负责人"
-                  loading={this.state.selectLoading}
-                  allowClear
-                  filter
-                  onFilterChange={(input) => {
-                    this.setState({
-                      selectLoading: true,
-                    });
-                    getUsers(input).then((res) => {
-                      this.setState({
-                        originUsers: res.content,
-                        selectLoading: false,
-                      });
-                    });
-                  }}
-                >
-                  {this.state.originUsers.map(user =>
-                    (<Option key={JSON.stringify(user)} value={JSON.stringify(user)}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', padding: '2px' }}>
-                        <UserHead
-                          user={{
-                            id: user.id,
-                            loginName: user.loginName,
-                            realName: user.realName,
-                            avatar: user.imageUrl,
-                          }}
-                        />
-                      </div>
-                    </Option>),
-                  )}
-                </Select>,
+                <Input disabled label="空间名称" />,
               )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('description', {
                 initialValue: this.state.description,
               })(
-                <TextArea label="模块描述" autosize maxLength={30} />,
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('defaultAssigneeRole', {
-                initialValue: this.state.defaultAssigneeRole,
-                rules: [{
-                  required: true,
-                  message: '默认经办人必须',
-                }],
-              })(
-                <Select label="默认经办人">
-                  {['模块负责人', '无'].map(defaultAssigneeRole =>
-                    (<Option key={defaultAssigneeRole} value={defaultAssigneeRole}>
-                      {defaultAssigneeRole}
-                    </Option>),
-                  )}
-                </Select>,
+                <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>
           </Form>

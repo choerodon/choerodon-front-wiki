@@ -1,4 +1,0 @@
-const OrganizationApiUrl = {
-    getSpaces: "",
-    createSpace : ""
-};

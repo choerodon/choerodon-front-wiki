@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message } from 'choerodon-ui';
-import { Content, stores } from 'choerodon-front-boot';
-// import UserHead from '../../../../components/UserHead';
-// import { getUsers } from '../../../../api/CommonApi';
-// import { createComponent } from '../../../../api/ComponentApi';
+import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
+import { Content, stores, axios } from 'choerodon-front-boot';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import './OperateSpace.scss';
 
 
@@ -12,6 +10,18 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { AppState } = stores;
 const FormItem = Form.Item;
+const intlPrefix = 'global.menusetting';
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 100 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 10 },
+  },
+};
+const inputWidth = 512;
 
 class AddSpace extends Component {
   constructor(props) {
@@ -27,15 +37,14 @@ class AddSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { defaultAssigneeRole, description, managerId, name } = values;
+        const { icon, name, describe } = values;
         const component = {
-          defaultAssigneeRole,
-          description,
-          managerId: managerId ? JSON.parse(managerId).id || 0 : 0,
+          icon,
           name,
+          describe
         };
         this.setState({ createLoading: true });
-        createComponent(component)
+        axios.post(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space`, component)
           .then((res) => {
             this.setState({
               createLoading: false,
@@ -46,7 +55,7 @@ class AddSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('创建模块失败');
+            message.error('创建空间失败');
           });
       }
     });
@@ -74,15 +83,21 @@ class AddSpace extends Component {
           description="为你的项目或组织创建一个空间。"
         >
           <Form>
-            <FormItem>
+            <FormItem
+              {...formItemLayout}
+            >
               {getFieldDecorator('icon', {
                 rules: [{
                   required: true,
-                  message: '请选择图标',
+                  message: '空间图标必填'
                 }],
+                validateTrigger: 'onChange'
               })(
-                <Input label="图标" maxLength={30} />,
-              )}
+                <IconSelect
+                  label="空间图标"
+                  style={{ width: inputWidth }}
+                />
+                )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('name', {
@@ -91,11 +106,11 @@ class AddSpace extends Component {
                   message: '空间名称必填',
                 }],
               })(
-                <Input label="空间名称" maxLength={30} />,
+                <Input label="空间名称" maxLength={15} />,
               )}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('description', {})(
+              {getFieldDecorator('describe', {})(
                 <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>

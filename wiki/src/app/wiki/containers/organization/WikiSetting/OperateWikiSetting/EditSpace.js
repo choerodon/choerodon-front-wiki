@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message } from 'choerodon-ui';
+import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
 import { Content, stores, axios } from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
@@ -8,6 +8,17 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { AppState } = stores;
 const FormItem = Form.Item;
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 100 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 10 },
+  },
+};
+const inputWidth = 512;
 
 class EditSpace extends Component {
   constructor(props) {
@@ -96,24 +107,26 @@ class EditSpace extends Component {
           description="你可以修改空间的图标和描述。"
         >
           <Form>
-            <FormItem>
+            <FormItem
+              {...formItemLayout}
+            >
               {getFieldDecorator('icon', {
                 initialValue: this.state.icon,
                 rules: [{
                   required: true,
-                  message: '请选择图标',
+                  message: '空间图标必须'
                 }],
+                validateTrigger: 'onChange'
               })(
-                <Input label="空间图标" maxLength={30} />,
-              )}
+                <IconSelect
+                  label="空间图标"
+                  style={{ width: inputWidth }}
+                />
+                )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('name', {
-                initialValue: this.state.name,
-                rules: [{
-                  required: true,
-                  message: '空间名称必填',
-                }],
+                initialValue: this.state.name
               })(
                 <Input disabled label="空间名称" />,
               )}
