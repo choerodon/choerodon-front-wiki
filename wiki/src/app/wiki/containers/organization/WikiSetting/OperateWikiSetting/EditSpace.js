@@ -69,7 +69,7 @@ class EditSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('修改模块失败');
+            message.error('修改空间失败');
           });
       }
     });
@@ -104,7 +104,7 @@ class EditSpace extends Component {
                   message: '请选择图标',
                 }],
               })(
-                <Input label="图标" maxLength={30} />,
+                <Input label="空间图标" maxLength={30} />,
               )}
             </FormItem>
             <FormItem>
@@ -122,7 +122,7 @@ class EditSpace extends Component {
               {getFieldDecorator('description', {
                 initialValue: this.state.description,
               })(
-                <TextArea label="空间描述" autosize maxLength={30} />,
+                <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>
           </Form>

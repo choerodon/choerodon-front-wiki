@@ -35,6 +35,7 @@ class WikiSettingHome extends Component {
 
   componentDidMount() {
     this.loadComponents();
+    window.console.log(AppState.currentMenuType.organizationId);
   }
 
   showComponent(record) {
@@ -48,7 +49,7 @@ class WikiSettingHome extends Component {
     this.setState({
       loading: true, //需要加载数据时设true
     });
-    axios.post('/wiki/v1/organizations/167/space/list_by_options')
+    axios.post(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/list_by_options`)
       .then((res) => {
         this.setState({
           components: res.content,
@@ -82,7 +83,7 @@ class WikiSettingHome extends Component {
         render: path => (
           <div style={{ width: '100%', overflow: 'hidden' }}>
             <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={path}>
-              <a href={path} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+              <a href={path} target="_blank" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
                 {path}
               </a>
             </Tooltip>

@@ -44,7 +44,7 @@ class AddSpace extends Component {
           describe
         };
         this.setState({ createLoading: true });
-        axios.post(`/wiki/v1/organizations/167/space`, component)
+        axios.post(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space`, component)
           .then((res) => {
             this.setState({
               createLoading: false,
@@ -55,7 +55,7 @@ class AddSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('创建模块失败');
+            message.error('创建空间失败');
           });
       }
     });
@@ -79,7 +79,7 @@ class AddSpace extends Component {
             padding: 0,
             width: 512,
           }}
-          title={`在项目"${AppState.currentMenuType.name}"中创建空间`}
+          title={`在组织"${AppState.currentMenuType.name}"中创建空间`}
           description="为你的项目或组织创建一个空间。"
         >
           <Form>
@@ -94,10 +94,10 @@ class AddSpace extends Component {
                 validateTrigger: 'onChange'
               })(
                 <IconSelect
-                  label={<FormattedMessage id={`${intlPrefix}.icon`}/>}
+                  label="空间图标"
                   style={{ width: inputWidth }}
                 />
-              )}
+                )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('name', {
@@ -106,7 +106,7 @@ class AddSpace extends Component {
                   message: '空间名称必填',
                 }],
               })(
-                <Input label="空间名称" maxLength={30} />,
+                <Input label="空间名称" maxLength={15} />,
               )}
             </FormItem>
             <FormItem>
