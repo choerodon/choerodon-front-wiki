@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message } from 'choerodon-ui';
-import { Content, stores } from 'choerodon-front-boot';
+import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
+import { Content, stores, axios } from 'choerodon-front-boot';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import './OperateSpace.scss';
 
 
@@ -9,6 +10,18 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { AppState } = stores;
 const FormItem = Form.Item;
+const intlPrefix = 'global.menusetting';
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 100 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 10 },
+  },
+};
+const inputWidth = 512;
 
 class AddSpace extends Component {
   constructor(props) {
@@ -24,14 +37,14 @@ class AddSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { icon, name, description } = values;
+        const { icon, name, describe } = values;
         const component = {
           icon,
           name,
-          description
+          describe
         };
         this.setState({ createLoading: true });
-        createComponent(component)
+        axios.post(`/wiki/v1/organizations/167/space`, component)
           .then((res) => {
             this.setState({
               createLoading: false,
@@ -70,14 +83,20 @@ class AddSpace extends Component {
           description="为你的项目或组织创建一个空间。"
         >
           <Form>
-            <FormItem>
+            <FormItem
+              {...formItemLayout}
+            >
               {getFieldDecorator('icon', {
                 rules: [{
                   required: true,
-                  message: '请选择图标',
+                  message: '空间图标必须'
                 }],
+                validateTrigger: 'onChange'
               })(
-                <Input label="图标" maxLength={30} />,
+                <IconSelect
+                  label={<FormattedMessage id={`${intlPrefix}.icon`}/>}
+                  style={{ width: inputWidth }}
+                />
               )}
             </FormItem>
             <FormItem>
@@ -91,7 +110,7 @@ class AddSpace extends Component {
               )}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('description', {})(
+              {getFieldDecorator('describe', {})(
                 <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>

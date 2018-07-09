@@ -48,7 +48,7 @@ class WikiSettingHome extends Component {
     this.setState({
       loading: false, //需要加载数据时设true
     });
-    axios.get('spacesUrl')
+    axios.get('/wiki/v1/organizations/167/list_by_options')
       .then((res) => {
         this.setState({
           components: res,
