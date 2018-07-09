@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input, Select, message } from 'choerodon-ui';
-import { Content, stores } from 'choerodon-front-boot';
-// import UserHead from '../../../../components/UserHead';
-// import { getUsers, getUser } from '../../../../api/CommonApi';
-// import { loadComponent, updateComponent } from '../../../../api/ComponentApi';
+import { Content, stores, axios } from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
 const { Sidebar } = Modal;
@@ -29,33 +26,22 @@ class EditSpace extends Component {
   }
 
   componentDidMount() {
-    this.loadComponent(this.props.componentId);
+    this.loadComponent(this.props.id);
   }
 
   loadComponent(componentId) {
-    loadComponent(componentId)
+    // loadComponent(componentId)
+    axios.get("url")
       .then((res) => {
-        const { defaultAssigneeRole, description, managerId, name } = res;
+        const { icon, description, path, name } = res;
         this.setState({
-          defaultAssigneeRole,
+          icon,
           description,
-          managerId: managerId || undefined,
+          path,
           name,
           component: res,
         });
-        if (managerId) {
-          this.loadUser(managerId);
-        }
       });
-  }
-
-  loadUser(managerId) {
-    getUser(managerId).then((res) => {
-      this.setState({
-        managerId: JSON.stringify(res.content[0]),
-        originUsers: [res.content[0]],
-      });
-    });
   }
 
   handleOk(e) {
@@ -94,7 +80,7 @@ class EditSpace extends Component {
     return (
       <Sidebar
         title="查看空间"
-        onText="修改"
+        okText="修改"
         cancelText="取消"
         visible={this.props.visible || false}
         confirmLoading={this.state.createLoading}
@@ -106,81 +92,37 @@ class EditSpace extends Component {
             padding: 0,
             width: 512,
           }}
-          title={`在项目"${AppState.currentMenuType.name}"中查看空间`}
+          title={`在组织"${AppState.currentMenuType.name}"中查看空间`}
           description="你可以修改空间的图标和描述。"
         >
           <Form>
+            <FormItem>
+              {getFieldDecorator('icon', {
+                initialValue: this.state.icon,
+                rules: [{
+                  required: true,
+                  message: '请选择图标',
+                }],
+              })(
+                <Input label="图标" maxLength={30} />,
+              )}
+            </FormItem>
             <FormItem>
               {getFieldDecorator('name', {
                 initialValue: this.state.name,
                 rules: [{
                   required: true,
-                  message: '模块名称必须',
+                  message: '空间名称必填',
                 }],
               })(
-                <Input label="模块名称" maxLength={30} />,
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('managerId', {
-                initialValue: this.state.managerId,
-              })(
-                <Select
-                  label="负责人"
-                  loading={this.state.selectLoading}
-                  allowClear
-                  filter
-                  onFilterChange={(input) => {
-                    this.setState({
-                      selectLoading: true,
-                    });
-                    getUsers(input).then((res) => {
-                      this.setState({
-                        originUsers: res.content,
-                        selectLoading: false,
-                      });
-                    });
-                  }}
-                >
-                  {this.state.originUsers.map(user =>
-                    (<Option key={JSON.stringify(user)} value={JSON.stringify(user)}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', padding: '2px' }}>
-                        <UserHead
-                          user={{
-                            id: user.id,
-                            loginName: user.loginName,
-                            realName: user.realName,
-                            avatar: user.imageUrl,
-                          }}
-                        />
-                      </div>
-                    </Option>),
-                  )}
-                </Select>,
+                <Input disabled label="空间名称" />,
               )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('description', {
                 initialValue: this.state.description,
               })(
-                <TextArea label="模块描述" autosize maxLength={30} />,
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('defaultAssigneeRole', {
-                initialValue: this.state.defaultAssigneeRole,
-                rules: [{
-                  required: true,
-                  message: '默认经办人必须',
-                }],
-              })(
-                <Select label="默认经办人">
-                  {['模块负责人', '无'].map(defaultAssigneeRole =>
-                    (<Option key={defaultAssigneeRole} value={defaultAssigneeRole}>
-                      {defaultAssigneeRole}
-                    </Option>),
-                  )}
-                </Select>,
+                <TextArea label="空间描述" autosize maxLength={30} />,
               )}
             </FormItem>
           </Form>

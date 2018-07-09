@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Button, Table, Spin, Popover, Tooltip, Icon } from 'choerodon-ui';
-import { Page, Header, Content, stores, Permission, axios } from 'choerodon-front-boot';
+import { Page, Header, Content, stores, axios } from 'choerodon-front-boot';
 import './WikiSettingHome.scss';
 import CreateSpace from '../OperateWikiSetting/AddSpace';
-// import EditComponent from '../ComponentComponent/EditComponent';
+import EditSpace from '../OperateWikiSetting/EditSpace';
 
 const { AppState } = stores;
 
@@ -40,18 +40,18 @@ class WikiSettingHome extends Component {
   showComponent(record) {
     this.setState({
       editComponentShow: true,
-      currentComponentId: record.componentId,
+      currentComponentId: record.id,
     });
   }
 
   loadComponents() {
     this.setState({
-      loading: false, //需要加载数据时设true
+      loading: true, //需要加载数据时设true
     });
-    axios.get('/wiki/v1/organizations/167/list_by_options')
+    axios.post('/wiki/v1/organizations/167/space/list_by_options')
       .then((res) => {
         this.setState({
-          components: res,
+          components: res.content,
           loading: false,
         });
       })
@@ -67,49 +67,24 @@ class WikiSettingHome extends Component {
         dataIndex: 'icon',
         width: '100px',
         render: icon => (
-          <div style={{ width: '100%', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={icon}>
-              <p style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
-                {icon}
-              </p>
-            </Tooltip>
-          </div>
+          <i className={`icon icon-${icon}`} />
         ),
       },
       {
         title: '空间名称',
         dataIndex: 'name',
         // width: '200px',
-        render: (issueCount, record) => (
-          <div
-            style={{ width: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#3f51b5' }}
-            role="none"
-            onClick={() => {
-              this.props.history.push(`/agile/issue?type=${urlParams.type}&id=${urlParams.id}&name=${urlParams.name}&organizationId=${urlParams.organizationId}&paramType=component&paramId=${record.componentId}&paramName=${record.name}`);
-            }}
-          >
-            <span style={{ display: 'inline-block', width: 25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'center' }}>{issueCount}</span>
-            <span>issues</span>
-          </div>
-        ),
       },
       {
         title: '空间地址',
-        dataIndex: 'address',
+        dataIndex: 'path',
         // width: '15%',
-        render: (managerId, record) => (
-          <div style={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={record.managerName}>
-              <div>
-                {/* <UserHead
-                  user={{
-                    id: record.managerId,
-                    loginName: '',
-                    realName: record.managerName,
-                    avatar: record.imageUrl,
-                  }}
-                /> */}
-              </div>
+        render: path => (
+          <div style={{ width: '100%', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={path}>
+              <a href={path} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+                {path}
+              </a>
             </Tooltip>
           </div>
         ),
@@ -130,22 +105,23 @@ class WikiSettingHome extends Component {
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'synchro',
         // width: '15%',
+        render: synchro => (
+          synchro ? "创建完成" : "创建中"
+        ),
       },
       {
         title: '',
-        dataIndex: 'edit',
+        dataIndex: 'id',
         // width: '10%',
-        render: (componentId, record) => (
+        render: (id, record) => (
           <div>
-
-            <Popover placement="bottom" mouseEnterDelay={0.5} content={<div><span>详情</span></div>}>
+            <Popover placement="bottom" mouseEnterDelay={0.5} content={<div><span>编辑</span></div>}>
               <Button shape="circle" onClick={this.showComponent.bind(this, record)}>
                 <Icon type="mode_edit" />
               </Button>
             </Popover>
-
           </div>
         ),
       },
@@ -169,7 +145,7 @@ class WikiSettingHome extends Component {
         <Content
           title={`wiki简介`}
           description="wiki是为项目和组织提供知识管理和共享的平台。"
-          link="http://v0-7.choerodon.io/zh/docs/user-guide/agile/component/"
+          link="http://choerodon.io/zh/"
         >
           <Spin spinning={this.state.loading}>
             <Table
@@ -187,6 +163,21 @@ class WikiSettingHome extends Component {
                   this.loadComponents();
                   this.setState({
                     createComponentShow: false,
+                  });
+                }}
+              />
+            ) : null
+          }
+          {
+            this.state.editComponentShow ? (
+              <EditSpace
+                id={this.state.currentComponentId}
+                visible={this.state.editComponentShow}
+                onCancel={() => this.setState({ editComponentShow: false })}
+                onOk={() => {
+                  this.loadComponents();
+                  this.setState({
+                    editComponentShow: false,
                   });
                 }}
               />
