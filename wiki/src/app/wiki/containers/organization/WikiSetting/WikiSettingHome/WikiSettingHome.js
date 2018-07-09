@@ -24,7 +24,13 @@ class WikiSettingHome extends Component {
   }
 
   syncInfo() {
-
+    axios.post("syncInfoUrl")
+      .then((res) => {
+        //正在同步或者同步成功
+      })
+      .catch((error) => {
+        window.console.warn('Sync userInfo failed! ');
+      });
   }
 
   componentDidMount() {
@@ -40,10 +46,9 @@ class WikiSettingHome extends Component {
 
   loadComponents() {
     this.setState({
-      loading: false,
+      loading: false, //需要加载数据时设true
     });
-    // loadComponents()
-    axios.get('url')
+    axios.get('spacesUrl')
       .then((res) => {
         this.setState({
           components: res,
@@ -51,7 +56,7 @@ class WikiSettingHome extends Component {
         });
       })
       .catch((error) => {
-        window.console.warn('load components failed, check your organization and project are correct, or please try again later');
+        window.console.warn('load spaces failed, check your organization and project are correct, or please try again later');
       });
   }
 

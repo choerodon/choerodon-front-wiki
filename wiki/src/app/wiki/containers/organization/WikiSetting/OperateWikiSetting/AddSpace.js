@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input, Select, message } from 'choerodon-ui';
 import { Content, stores } from 'choerodon-front-boot';
-// import UserHead from '../../../../components/UserHead';
-// import { getUsers } from '../../../../api/CommonApi';
-// import { createComponent } from '../../../../api/ComponentApi';
 import './OperateSpace.scss';
 
 
@@ -27,12 +24,11 @@ class AddSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { defaultAssigneeRole, description, managerId, name } = values;
+        const { icon, name, description } = values;
         const component = {
-          defaultAssigneeRole,
-          description,
-          managerId: managerId ? JSON.parse(managerId).id || 0 : 0,
+          icon,
           name,
+          description
         };
         this.setState({ createLoading: true });
         createComponent(component)

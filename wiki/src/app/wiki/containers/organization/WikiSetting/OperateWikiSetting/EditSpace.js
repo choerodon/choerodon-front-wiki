@@ -107,7 +107,7 @@ class EditSpace extends Component {
             width: 512,
           }}
           title={`在项目"${AppState.currentMenuType.name}"中查看空间`}
-          description="你可以修改空间的图标或描述。"
+          description="你可以修改空间的图标和描述。"
         >
           <Form>
             <FormItem>
