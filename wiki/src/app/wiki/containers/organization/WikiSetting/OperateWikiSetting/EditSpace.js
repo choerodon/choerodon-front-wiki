@@ -42,7 +42,7 @@ class EditSpace extends Component {
 
   loadComponent(componentId) {
     // loadComponent(componentId)
-    axios.get("url")
+    axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/${componentId}`)
       .then((res) => {
         const { icon, description, path, name } = res;
         this.setState({
@@ -59,17 +59,16 @@ class EditSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { defaultAssigneeRole, description, managerId, name } = values;
+        const { icon, name, description } = values;
         const component = {
           objectVersionNumber: this.state.component.objectVersionNumber,
-          componentId: this.state.component.componentId,
-          defaultAssigneeRole,
-          description,
-          managerId: managerId ? JSON.parse(managerId).id || 0 : 0,
+          id: this.props.id,
           name,
+          icon,
+          description
         };
         this.setState({ createLoading: true });
-        updateComponent(component.componentId, component)
+        axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/${component.id}`, component)
           .then((res) => {
             this.setState({
               createLoading: false,

@@ -33,15 +33,26 @@ class AddSpace extends Component {
     };
   }
 
+  checkName(rule, value, callback) {
+    axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/check?name=${value}`)
+      .then((res) => {
+        if (res.failed) {
+          callback("空间名称已被使用！")
+        } else {
+          callback()
+        }
+      });
+  }
+
   handleOk(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { icon, name, describe } = values;
+        const { icon, name, description } = values;
         const component = {
           icon,
           name,
-          describe
+          description
         };
         this.setState({ createLoading: true });
         axios.post(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space`, component)
@@ -104,13 +115,15 @@ class AddSpace extends Component {
                 rules: [{
                   required: true,
                   message: '空间名称必填',
-                }],
+                }, {
+                  validator: this.checkName,
+                }]
               })(
                 <Input label="空间名称" maxLength={15} />,
               )}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('describe', {})(
+              {getFieldDecorator('description', {})(
                 <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>

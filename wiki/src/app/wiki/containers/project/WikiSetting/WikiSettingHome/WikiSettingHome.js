@@ -49,7 +49,7 @@ class WikiSettingHome extends Component {
     this.setState({
       loading: true, //需要加载数据时设true
     });
-    axios.post(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/list_by_options`)
+    axios.post(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/list_by_options?sort=id%2Cdesc`)
       .then((res) => {
         this.setState({
           components: res.content,
@@ -80,10 +80,10 @@ class WikiSettingHome extends Component {
         title: '空间地址',
         dataIndex: 'path',
         // width: '15%',
-        render: path => (
+        render: (path, record) => (
           <div style={{ width: '100%', overflow: 'hidden' }}>
             <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={path}>
-              <a href={path} target="_blank" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+              <a hidden={!record.synchro} href={path} target="_blank" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
                 {path}
               </a>
             </Tooltip>
@@ -119,7 +119,11 @@ class WikiSettingHome extends Component {
         render: (id, record) => (
           <div>
             <Popover placement="bottom" mouseEnterDelay={0.5} content={<div><span>编辑</span></div>}>
-              <Button shape="circle" onClick={this.showComponent.bind(this, record)}>
+              <Button
+                disabled={!record.synchro}
+                shape="circle"
+                onClick={this.showComponent.bind(this, record)}
+              >
                 <Icon type="mode_edit" />
               </Button>
             </Popover>
