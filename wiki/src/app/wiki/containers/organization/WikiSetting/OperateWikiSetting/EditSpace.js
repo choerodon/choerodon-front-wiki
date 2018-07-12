@@ -130,13 +130,6 @@ class EditSpace extends Component {
                 <Input disabled label="空间名称" />,
               )}
             </FormItem>
-            <FormItem>
-              {getFieldDecorator('description', {
-                initialValue: this.state.description,
-              })(
-                <TextArea label="空间描述" autosize maxLength={150} />,
-              )}
-            </FormItem>
           </Form>
         </Content>
       </Sidebar>

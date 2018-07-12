@@ -122,11 +122,6 @@ class AddSpace extends Component {
                 <Input label="空间名称" maxLength={15} />,
               )}
             </FormItem>
-            <FormItem>
-              {getFieldDecorator('description', {})(
-                <TextArea label="空间描述" autosize maxLength={150} />,
-              )}
-            </FormItem>
           </Form>
         </Content>
       </Sidebar>

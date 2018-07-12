@@ -45,6 +45,20 @@ class WikiSettingHome extends Component {
     });
   }
 
+  getLastName(path) {
+    const arrlen = path.split('/');
+    var backstr = "";
+    for(var a=5;a<arrlen.length;a++){
+      backstr = backstr+arrlen[a];
+      if(a!=arrlen.length-1){
+        backstr = backstr+"/";
+      }
+    }
+    return backstr;
+  }
+
+
+
   loadComponents() {
     this.setState({
       loading: true, //需要加载数据时设true
@@ -84,22 +98,8 @@ class WikiSettingHome extends Component {
           <div style={{ width: '100%', overflow: 'hidden' }}>
             <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={path}>
               <a hidden={!record.synchro} href={path} target="_blank" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
-                {path}
+                ../{this.getLastName(path)}
               </a>
-            </Tooltip>
-          </div>
-        ),
-      },
-      {
-        title: '空间描述',
-        dataIndex: 'description',
-        // width: '30%',
-        render: description => (
-          <div style={{ width: '100%', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={description}>
-              <p style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
-                {description}
-              </p>
             </Tooltip>
           </div>
         ),
@@ -132,7 +132,7 @@ class WikiSettingHome extends Component {
     ];
     return (
       <Page className="c7n-wiki">
-        <Header title="wiki管理">
+        <Header title="Wiki管理">
           {/*<Button funcTyp="flat" onClick={() => this.syncInfo()}>
             <Icon type="autorenew icon" />
             <span>同步信息</span>

@@ -6,11 +6,8 @@ import './OperateSpace.scss';
 
 
 const { Sidebar } = Modal;
-const { TextArea } = Input;
-const { Option } = Select;
 const { AppState } = stores;
 const FormItem = Form.Item;
-const intlPrefix = 'global.menusetting';
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -120,11 +117,6 @@ class AddSpace extends Component {
                 }]
               })(
                 <Input label="空间名称" maxLength={15} />,
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('description', {})(
-                <TextArea label="空间描述" autosize maxLength={150} />,
               )}
             </FormItem>
           </Form>
