@@ -147,8 +147,8 @@ class WikiSettingHome extends Component {
           </Button>
         </Header>
         <Content
-          title={`wiki简介`}
-          description="wiki是为项目和组织提供知识管理和共享的平台。"
+          title={`Wiki简介`}
+          description="Wiki是为项目和组织提供知识管理和共享的平台。"
           link="http://choerodon.io/zh/"
         >
           <Spin spinning={this.state.loading}>

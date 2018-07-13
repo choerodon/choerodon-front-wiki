@@ -3,7 +3,7 @@
   sort: 1
   organization: # 组织层的菜单
     - "wiki-management": # 菜单字段
-        icon: manage_organization  # 菜单图标
+        icon: book  # 菜单图标
         Routes: /wiki/organization/wikisetting # 菜单对应路由
         sort: 1 # 菜单的次序
         permission: # 菜单内容具有的权限
@@ -13,7 +13,7 @@
   sort: 1
   project:
     - "wiki-management":
-        icon: apps
+        icon: book
         Routes: /wiki/project/wikisetting 
         sort: 1
         permission:
