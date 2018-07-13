@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry.cn-hangzhou.aliyuncs.com/choerodon-c7nkb/wiki-front
+  repository: registry.cn-hangzhou.aliyuncs.com/choerodon-c7nkb/choerodon-front-wiki
 
 preJob:
   preConfig:
