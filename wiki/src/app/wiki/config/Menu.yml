@@ -5,7 +5,7 @@
     - "wiki-management": # 菜单字段
         icon: book  # 菜单图标
         Routes: /wiki/organization/wikisetting # 菜单对应路由
-        sort: 1 # 菜单的次序
+        sort: 7 # 菜单的次序
         permission: # 菜单内容具有的权限
           - 'devops-service.application-template.listByOrgId'
 "prosetting": # 此处为最外层的模块服务字段
@@ -15,7 +15,7 @@
     - "wiki-management":
         icon: book
         Routes: /wiki/project/wikisetting 
-        sort: 1
+        sort: 3
         permission:
           - 'devops-service.git-flow.listByAppId'
   # site: # site层的菜单
