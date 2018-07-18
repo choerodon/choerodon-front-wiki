@@ -8,7 +8,7 @@
         Routes: /wiki/organization/wikisetting # 菜单对应路由
         sort: 7 # 菜单的次序
         permission: # 菜单内容具有的权限
-          - 'devops-service.application-template.listByOrgId'
+          - 'wiki-service.wiki-organization-space.pageByOptions'
 # 项目设置
 "prosetting":
   icon: IAM
@@ -19,6 +19,10 @@
         Routes: /wiki/project/wikisetting 
         sort: 3
         permission:
-          - 'devops-service.git-flow.listByAppId'
+          - 'wiki-service.wiki-project-space.create'
+          - 'wiki-service.wiki-project-space.checkName'
+          - 'wiki-service.wiki-project-space.pageByOptions'
+          - 'wiki-service.wiki-project-space.query'
+          - 'wiki-service.wiki-project-space.update'
   # site: # site层的菜单
   # user: # 个人中心层的菜单
