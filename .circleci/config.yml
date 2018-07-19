@@ -13,9 +13,9 @@ jobs:
       - checkout
       - run: |
             export CI_COMMIT_TAG=$CIRCLE_TAG
-            cd testManager && npm install -registry https://nexus.choerodon.com.cn/repository/choerodon-npm/ && cd ..
-            python ./testManager/node_modules/choerodon-front-boot/structure/configAuto.py testManager
-            cd testManager
+            cd wiki && npm install -registry https://nexus.choerodon.com.cn/repository/choerodon-npm/ && cd ..
+            python ./wiki/node_modules/choerodon-front-boot/structure/configAuto.py wiki
+            cd wiki
             chmod -R 777 node_modules
             npm run build
             find dist -name '*.js' | xargs sed -i "s/localhost:version/${CI_COMMIT_TAG}/g"
@@ -23,8 +23,8 @@ jobs:
           root: .
           paths:
             - config.yml
-            - testManager/dist
-            - testManager/node_modules/choerodon-front-boot/structure
+            - wiki/dist
+            - wiki/node_modules/choerodon-front-boot/structure
   docker_build:
     machine: true
     steps:
@@ -32,9 +32,8 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          mv testManager/dist ./dist
-          mv testManager/node_modules/choerodon-front-boot/structure structure
-          mv testManager/testManager-structure testManager-structure
+          mv wiki/dist ./dist
+          mv wiki/node_modules/choerodon-front-boot/structure structure
           sed -i "s/registry.cn-hangzhou.aliyuncs.com\/choerodon-tools/choerodon/g" Dockerfile
           export CI_COMMIT_TAG=$CIRCLE_TAG
           docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}
