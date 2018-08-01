@@ -44,7 +44,7 @@ const zh_CN = {
     'wiki.operating': '处理中，请耐心等待',
     'wiki.failed': '不可编辑',
     'wiki.delete.space': '删除空间',
-    'wiki.delete.tooltip': '确定要删除该空间吗',
+    'wiki.delete.tooltip': '您确定要将此页面删除吗',
   
    ...pageDetail,
 };
