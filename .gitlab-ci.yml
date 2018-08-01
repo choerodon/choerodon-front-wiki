@@ -14,20 +14,6 @@ node_build:
     - node_build build
     - cp -r dist /cache/${CI_PROJECT_NAME}-${CI_PROJECT_ID}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}/dist
     - cp -r node_modules/choerodon-front-boot/structure /cache/${CI_PROJECT_NAME}-${CI_PROJECT_ID}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}/structure
-  only:
-    - /^release-.*$/
-    - /^hotfix-.*$/
-    - develop
-    - tags
-
-node_build_dev:
-  stage: node_build
-  script:
-    - node_module wiki
-    - node_build build
-    - rm -rf /cache/${CI_PROJECT_NAME}-${CI_PROJECT_ID}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
-  only:
-    - /^feature-.*$/
 
 docker_build:
   image: registry.cn-hangzhou.aliyuncs.com/choerodon-tools/cibase:0.5.0
@@ -36,11 +22,6 @@ docker_build:
     - docker_build
     - rm -rf /cache/${CI_PROJECT_NAME}-${CI_PROJECT_ID}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
     - chart_build
-  only:
-    - develop
-    - /^release-.*$/
-    - /^hotfix-.*$/
-    - tags
 
 .auto_devops: &auto_devops |
     curl -o .auto_devops.sh \

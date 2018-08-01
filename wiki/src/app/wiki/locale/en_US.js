@@ -32,7 +32,7 @@ const enUS = {
     'wiki.operating': 'operating',
     'wiki.failed': 'Do not edit',
     'wiki.delete.space': 'Delete space',
-    'wiki.delete.tooltip': 'Are you sure you want to delete the space',
+    'wiki.delete.tooltip': 'Are you sure you want to delete this page',
 };
   export default enUS;
   
