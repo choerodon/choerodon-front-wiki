@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
-import { Content, stores, axios } from 'choerodon-front-boot';
+import { observer, inject } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Button, Form, Select, Input, Tooltip, Modal, Popover, IconSelect } from 'choerodon-ui';
+import { stores, Content, axios} from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
 const { Sidebar } = Modal;
@@ -30,7 +33,6 @@ class EditSpace extends Component {
 
       component: {},
       defaultAssigneeRole: undefined,
-      description: undefined,
       managerId: undefined,
       name: undefined,
     };
@@ -44,10 +46,9 @@ class EditSpace extends Component {
     // loadComponent(componentId)
     axios.get(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/${componentId}`)
       .then((res) => {
-        const { icon, description, path, name } = res;
+        const { icon, path, name } = res;
         this.setState({
           icon,
-          description,
           path,
           name,
           component: res,
@@ -59,13 +60,13 @@ class EditSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { icon, name, description } = values;
+        const { intl } = this.props;
+        const { icon, name } = values;
         const component = {
           objectVersionNumber: this.state.component.objectVersionNumber,
           id: this.props.id,
           name,
-          icon,
-          description
+          icon
         };
         this.setState({ createLoading: true });
         axios.put(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/${component.id}`, component)
@@ -79,7 +80,7 @@ class EditSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('修改空间失败');
+            message.error(intl.formatMessage({ id: 'wiki.edit.space.error' }));
           });
       }
     });
@@ -87,11 +88,12 @@ class EditSpace extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { intl } = this.props;
     return (
       <Sidebar
-        title="查看空间"
-        okText="修改"
-        cancelText="取消"
+        title={<FormattedMessage id={'wiki.see.space'} />}
+        okText={<FormattedMessage id={'edit'} />}
+        cancelText={<FormattedMessage id={'cancel'} />}
         visible={this.props.visible || false}
         confirmLoading={this.state.createLoading}
         onOk={this.handleOk.bind(this)}
@@ -103,7 +105,7 @@ class EditSpace extends Component {
             width: 512,
           }}
           title={`在项目"${AppState.currentMenuType.name}"中查看空间`}
-          description="你可以修改空间的图标和描述。"
+          description={<FormattedMessage id={'wiki.eidt.description'} />}
         >
           <Form>
             <FormItem
@@ -113,12 +115,12 @@ class EditSpace extends Component {
                 initialValue: this.state.icon,
                 rules: [{
                   required: true,
-                  message: '空间图标必填'
+                  message: intl.formatMessage({ id: 'required' }),
                 }],
                 validateTrigger: 'onChange'
               })(
                 <IconSelect
-                  label="空间图标"
+                  label={<FormattedMessage id={'wiki.space.icon'} />}
                   style={{ width: inputWidth }}
                 />
                 )}
@@ -127,7 +129,7 @@ class EditSpace extends Component {
               {getFieldDecorator('name', {
                 initialValue: this.state.name
               })(
-                <Input disabled label="空间名称" />,
+                <Input disabled label={<FormattedMessage id={'wiki.space.name'} />}ss/>,
               )}
             </FormItem>
           </Form>
@@ -137,4 +139,4 @@ class EditSpace extends Component {
   }
 }
 
-export default Form.create()(EditSpace);
+export default Form.create({})(withRouter(injectIntl(EditSpace)));
