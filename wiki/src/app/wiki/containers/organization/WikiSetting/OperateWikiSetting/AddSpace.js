@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message, IconSelect } from 'choerodon-ui';
-import { Content, stores, axios } from 'choerodon-front-boot';
+import { observer, inject } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { Button, Form, Select, Input, Tooltip, Modal, Popover, IconSelect } from 'choerodon-ui';
+import { stores, Content, axios} from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
 
@@ -30,11 +32,12 @@ class AddSpace extends Component {
     };
   }
 
-  checkName(rule, value, callback) {
+  checkName = (rule, value, callback) => {
+    const { intl } = this.props;
     axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/check?name=${value}`)
       .then((res) => {
         if (res.failed) {
-          callback("空间名称已被使用！")
+          callback(intl.formatMessage({ id: 'wiki.name.check.exist' }))
         } else {
           callback()
         }
@@ -45,6 +48,7 @@ class AddSpace extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const { intl } = this.props;
         const { icon, name, description } = values;
         const component = {
           icon,
@@ -63,7 +67,7 @@ class AddSpace extends Component {
             this.setState({
               createLoading: false,
             });
-            message.error('创建空间失败');
+            message.error(intl.formatMessage({ id: 'wiki.create.space.error' }));
           });
       }
     });
@@ -71,12 +75,13 @@ class AddSpace extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { intl } = this.props;
     return (
       <Sidebar
         className="c7n-component-component"
-        title="创建空间"
-        okText="创建"
-        cancelText="取消"
+        title={<FormattedMessage id={'wiki.create.space'} />}
+        okText={<FormattedMessage id={'create'} />}
+        cancelText={<FormattedMessage id={'cancel'} />}
         visible={this.props.visible || false}
         confirmLoading={this.state.createLoading}
         onOk={this.handleOk.bind(this)}
@@ -87,8 +92,8 @@ class AddSpace extends Component {
             padding: 0,
             width: 512,
           }}
-          title={`在组织"${AppState.currentMenuType.name}"中创建空间`}
-          description="为你的项目或组织创建一个空间。"
+          title={`在组织"${AppState.currentMenuType.name}"中创建空间`} 
+          description={<FormattedMessage id={'wiki.create.org.description'} />}
         >
           <Form>
             <FormItem
@@ -97,12 +102,12 @@ class AddSpace extends Component {
               {getFieldDecorator('icon', {
                 rules: [{
                   required: true,
-                  message: '空间图标必须'
+                  message: intl.formatMessage({ id: 'required' }),
                 }],
                 validateTrigger: 'onChange'
               })(
                 <IconSelect
-                  label="空间图标"
+                  label={<FormattedMessage id={'wiki.space.icon'} />}
                   style={{ width: inputWidth }}
                 />
                 )}
@@ -111,12 +116,12 @@ class AddSpace extends Component {
               {getFieldDecorator('name', {
                 rules: [{
                   required: true,
-                  message: '空间名称必填',
+                  message: intl.formatMessage({ id: 'required' }),
                 }, {
                   validator: this.checkName,
                 }]
               })(
-                <Input label="空间名称" maxLength={15} />,
+                <Input label={<FormattedMessage id={'wiki.space.name'} />} maxLength={15} />,
               )}
             </FormItem>
           </Form>
@@ -126,4 +131,5 @@ class AddSpace extends Component {
   }
 }
 
-export default Form.create()(AddSpace);
+export default Form.create({})(withRouter(injectIntl(AddSpace)));
+

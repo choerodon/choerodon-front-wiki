@@ -9,12 +9,16 @@ const ProjectWikiSetting = asyncRouter(() => import('./project/WikiSetting'))
 class WIKIIndex extends React.Component {
     render() {
         const { match, AppState } = this.props;
+        const langauge = AppState.currentLanguage;
+        const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`../locale/${langauge}`));
         return (
+            <IntlProviderAsync>
             <Switch>
                 <Route path={`${match.url}/organization/wikisetting`} component={OrganizationWikiSetting} />
                 <Route path={`${match.url}/project/wikisetting`} component={ProjectWikiSetting} />
                 <Route path={'*'} component={nomatch} />
             </Switch>
+            </IntlProviderAsync>
         );
     }
 }
