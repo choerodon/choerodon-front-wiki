@@ -50,12 +50,16 @@ class WikiSettingHome extends Component {
   } 
 
   handleDelete = () => { 
+    this.setState({
+      confirmShow: true,
+    });
     axios.delete(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/${this.state.currentComponentId}`)
     .then((datas) => {
       const res = this.handleProptError(datas);
       if(res){
         this.setState({
           openRemove: false,
+          confirmShow: false,
         });
         this.loadComponents();
       }
@@ -105,19 +109,14 @@ class WikiSettingHome extends Component {
     const { type, id: projectId, organizationId: orgId } = menu;
     const column = [
       {
-        title: <FormattedMessage id={'wiki.column.icon'} />,
-        dataIndex: 'icon',
-        key: 'icon',
-        width: '100px',
-        render: icon => (
-          <i className={`icon icon-${icon}`} />
-        ),
-      },
-      {
         title: <FormattedMessage id={'wiki.column.name'} />,
         dataIndex: 'name',
         key: 'name',
-        // width: '200px',
+        render: (text, record) => {
+          return (
+            <span><Icon type={record.icon} style={{ verticalAlign: 'text-bottom' }} /> {record.name}</span>
+          );
+        },
       },
       {
         title: <FormattedMessage id={'wiki.column.path'} />,
@@ -174,43 +173,51 @@ class WikiSettingHome extends Component {
         render: (record) => {
           let editDom = null;
           let deletDom = null;
-          switch (record.status) {
-            case 'operating':
-            editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
-              <span className="icon icon-mode_edit c7n-app-icon-disabled" />
-            </Tooltip>);
-            deletDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
-              <span className="icon icon-delete_forever c7n-app-icon-disabled" />
-            </Tooltip>);
-            break;
-           case 'failed':  
-              editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.failed'} />}>
-              <span className="icon icon-mode_edit c7n-app-icon-disabled" />
-              </Tooltip>);
-              deletDom = (<React.Fragment>
-                {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'delete'} />}>
-                  <Button shape="circle" size={'small'} funcType="flat" onClick={this.openRemove.bind(this, record)}>
-                    <span className="icon icon-delete_forever" />
+          if (record.resourceType !== 'project') { 
+            switch (record.status) {
+              case 'operating':
+                editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
+                  <Button shape="circle" size={'small'} funcType="flat">
+                    <span className="icon icon-mode_edit c7n-app-icon-disabled" />
                   </Button>
-                </Tooltip>}
-              </React.Fragment>);
-              break;
-            case 'success':
-              editDom = (<React.Fragment> 
-                {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'editor'} />}>
-                  <Button shape="circle" size={'small'} funcType="flat" onClick={this.showComponent.bind(this, record)}>
-                    <span className="icon icon-mode_edit" />
+                </Tooltip>);
+                deletDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
+                  <Button shape="circle" size={'small'} funcType="flat">
+                    <span className="icon icon-delete_forever c7n-app-icon-disabled" />
                   </Button>
-                </Tooltip>}
-              </React.Fragment>);
-              deletDom = (<React.Fragment>
-                {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'delete'} />}>
-                  <Button shape="circle" size={'small'} funcType="flat" onClick={this.openRemove.bind(this, record)}>
-                    <span className="icon icon-delete_forever" />
+                </Tooltip>);
+                break;
+              case 'failed':
+                editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.failed'} />}>
+                  <Button shape="circle" size={'small'} funcType="flat">
+                    <span className="icon icon-mode_edit c7n-app-icon-disabled" />
                   </Button>
-                </Tooltip>}
-              </React.Fragment>);
-            break;
+                </Tooltip>);
+                deletDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'delete'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.openRemove.bind(this, record)}>
+                      <span className="icon icon-delete_forever" />
+                    </Button>
+                  </Tooltip>}
+                </React.Fragment>);
+                break;
+                case 'success':
+                editDom = (<React.Fragment> 
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'editor'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.showComponent.bind(this, record)}>
+                      <span className="icon icon-mode_edit" />
+                    </Button>
+                  </Tooltip>}
+                </React.Fragment>);
+                deletDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'delete'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.openRemove.bind(this, record)}>
+                      <span className="icon icon-delete_forever" />
+                    </Button>
+                  </Tooltip>}
+                </React.Fragment>);
+                break;
+            }
           }
           return (<div>
             <Permission
@@ -311,12 +318,12 @@ class WikiSettingHome extends Component {
             ) : null
           }
           <Modal
-          onCancel={this.closeRemove}
+          closable={false}
           visible={this.state.openRemove}
           title={<FormattedMessage id={'wiki.delete.space'} />}
           footer={[
             <Button key="back" onClick={this.closeRemove}><FormattedMessage id={'cancel'} /></Button>,
-            <Button key="submit" type="danger" onClick={this.handleDelete}>
+            <Button key="submit" type="danger" loading={this.state.confirmShow}  onClick={this.handleDelete}>
               <FormattedMessage id={'delete'} />
             </Button>,
           ]}
