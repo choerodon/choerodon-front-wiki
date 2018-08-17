@@ -286,6 +286,7 @@ class WikiSettingHome extends Component {
               dataSource={this.state.components}
               scroll={{ x: true }}
               rowKey={record => record.id}
+              defaultExpandAllRows={true} 
             />
           </Spin>
           {
