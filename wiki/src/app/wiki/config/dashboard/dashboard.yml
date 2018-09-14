@@ -1,0 +1,8 @@
+dashboard:
+  - code: "wiki"
+    icon: donut_small
+    title: "Wiki空间"
+    description: "Wiki空间"
+    level: project
+    sort: 1
+
