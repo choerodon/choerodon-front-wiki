@@ -23,6 +23,10 @@ class WikiSettingHome extends Component {
       editComponentShow: false,
       createComponentShow: false,
       openRemove: false, 
+      syncProjectVisible: false,
+      syncProjectLoading: false,
+      syncUnderProjectVisible: false,
+      syncUnderProjectLoading: false,
     };
   }
   
@@ -103,6 +107,73 @@ class WikiSettingHome extends Component {
       });
   }
 
+  syncProjectShowModal = () => {
+    this.setState({
+      syncProjectVisible: true,
+    });
+  }
+
+  projectHandleOk = () => {
+    this.setState({
+      syncProjectLoading: true,
+    });
+    axios.get(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/sync_project`)
+    .then((datas) => {
+      const res = this.handleProptError(datas);
+      if(res){
+        this.setState({
+          syncProjectVisible: false,
+        });
+        this.loadComponents();
+      } else {
+        this.setState({
+          syncProjectVisible: false,
+          syncProjectLoading: false,
+        });
+      }
+    });
+  }
+
+  projectHandleCancel = () => {
+    this.setState({
+      syncProjectVisible: false,
+    });
+  }
+
+  syncUnderProjectShowModal = () => {
+    this.setState({
+      syncUnderProjectVisible: true,
+    });
+  }
+
+  underProjectHandleOk = () => {
+    this.setState({
+      syncUnderProjectLoading: true,
+    });
+    axios.put(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/sync/{id}`)
+    .then((datas) => {
+      const res = this.handleProptError(datas);
+      if(res){
+        this.setState({
+          syncUnderProjectVisible: false,
+        });
+        this.loadComponents();
+      } else {
+        this.setState({
+          syncUnderProjectVisible: false,
+          syncUnderProjectLoading: false,
+        });
+      }
+    });
+  }
+
+  underProjectHandleCancel = () => {
+    this.setState({
+      syncUnderProjectVisible: false,
+    });
+  }
+
+
   render() { 
     const menu = AppState.currentMenuType;
     const projectName = menu.name;
@@ -173,7 +244,19 @@ class WikiSettingHome extends Component {
         render: (record) => {
           let editDom = null;
           let deletDom = null;
-          if (record.resourceType !== 'project') { 
+          let syncDom = null;
+          let projectSyncDom = null;
+          if (record.resourceType === 'project') {
+            if (record.status === 'failed') {
+              syncDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncProjectShowModal}>
+                      <span className="icon icon-sync" />
+                    </Button>
+                  </Tooltip>}
+              </React.Fragment>);
+            }
+          } else { 
             switch (record.status) {
               case 'operating':
                 editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
@@ -188,6 +271,13 @@ class WikiSettingHome extends Component {
                 </Tooltip>);
                 break;
               case 'failed':
+                projectSyncDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderProjectShowModal}>
+                      <span className="icon icon-sync" />
+                    </Button>
+                  </Tooltip>}
+                </React.Fragment>);
                 editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.failed'} />}>
                   <Button shape="circle" size={'small'} funcType="flat">
                     <span className="icon icon-mode_edit c7n-app-icon-disabled" />
@@ -221,6 +311,22 @@ class WikiSettingHome extends Component {
           }
           return (<div>
             <Permission
+              service={['wiki-service.wiki-project-space.sync']}
+              type={type}
+              projectId={projectId}
+              organizationId={orgId}
+            >
+              {projectSyncDom}
+            </Permission>
+            <Permission
+              service={['wiki-service.wiki-scanning.syncProject']}
+              type={type}
+              projectId={projectId}
+              organizationId={orgId}
+            >
+              {syncDom}
+            </Permission>
+            <Permission
               service={['wiki-service.wiki-project-space.update']}
               type={type}
               projectId={projectId}
@@ -248,6 +354,8 @@ class WikiSettingHome extends Component {
           'wiki-service.wiki-project-space.update',
           'wiki-service.wiki-project-space.checkName',
           'wiki-service.wiki-project-space.delete',
+          'wiki-service.wiki-project-space.sync',
+          'wiki-service.wiki-scanning.syncProject',
         ]}
         className="c7n-wiki"
        > 
@@ -330,6 +438,26 @@ class WikiSettingHome extends Component {
           ]}
           > 
           <p><FormattedMessage id={'wiki.delete.tooltip'} />？</p>
+        </Modal>
+        <Modal
+          closable={false}
+          title={<FormattedMessage id={'wiki.sync.space'} />}
+          visible={this.state.syncProjectVisible}
+          onOk={this.projectHandleOk}
+          confirmLoading={this.state.syncProjectLoading}
+          onCancel={this.projectHandleCancel}
+        >
+          <p><FormattedMessage id={'wiki.sync.project.tooltip'} />？</p>
+        </Modal>
+        <Modal
+          closable={false}
+          title={<FormattedMessage id={'wiki.sync.space'} />}
+          visible={this.state.syncUnderProjectVisible}
+          onOk={this.underProjectHandleOk}
+          confirmLoading={this.state.syncUnderProjectLoading}
+          onCancel={this.underProjectHandleCancel}
+        >
+          <p><FormattedMessage id={'wiki.sync.under.project.tooltip'} />？</p>
         </Modal>
         </Content>
       </Page>

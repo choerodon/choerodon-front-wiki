@@ -23,6 +23,12 @@ class WikiSettingHome extends Component {
       editComponentShow: false,
       createComponentShow: false,
       openRemove: false,
+      syncVisible: false,
+      syncLoading: false,
+      syncOrgVisible: false,
+      syncOrgLoading: false,
+      syncUnderOrgVisible: false,
+      syncUnderOrgLoading: false,
     };
   }
 
@@ -88,7 +94,6 @@ class WikiSettingHome extends Component {
   }
 
 
-
   loadComponents() {
     this.setState({
       loading: true, //需要加载数据时设true
@@ -103,6 +108,105 @@ class WikiSettingHome extends Component {
       .catch((error) => {
         window.console.warn('load spaces failed, check your organization and project are correct, or please try again later');
       });
+  }
+
+  syncShowModal = () => {
+    this.setState({
+      syncVisible: true,
+    });
+  }
+
+  handleOk = () => {
+    this.setState({
+      syncLoading: true,
+    });
+    axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync`)
+    .then((datas) => {
+      const res = this.handleProptError(datas);
+      if(res){
+        this.setState({
+          syncVisible: false,
+        });
+        this.loadComponents();
+      } else {
+        this.setState({
+          syncVisible: false,
+          syncLoading: false,
+        });
+      }
+    });
+  }
+
+  handleCancel = () => {
+    this.setState({
+      syncVisible: false,
+    });
+  }
+
+  syncOrgShowModal = () => {
+    this.setState({
+      syncOrgVisible: true,
+    });
+  }
+
+  orgHandleOk = () => {
+    this.setState({
+      syncOrgLoading: true,
+    });
+    axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync_org`)
+    .then((datas) => {
+      const res = this.handleProptError(datas);
+      if(res){
+        this.setState({
+          syncOrgVisible: false,
+        });
+        this.loadComponents();
+      } else {
+        this.setState({
+          syncOrgVisible: false,
+          syncOrgLoading: false,
+        });
+      }
+    });
+  }
+
+  orgHandleCancel = () => {
+    this.setState({
+      syncOrgVisible: false,
+    });
+  }
+
+  syncUnderOrgShowModal = () => {
+    this.setState({
+      syncUnderOrgVisible: true,
+    });
+  }
+
+  underOrgHandleOk = () => {
+    this.setState({
+      syncUnderOrgLoading: true,
+    });
+    axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync/{id}`)
+    .then((datas) => {
+      const res = this.handleProptError(datas);
+      if(res){
+        this.setState({
+          syncUnderOrgVisible: false,
+        });
+        this.loadComponents();
+      } else {
+        this.setState({
+          syncUnderOrgVisible: false,
+          syncUnderOrgLoading: false,
+        });
+      }
+    });
+  }
+
+  underOrgHandleCancel = () => {
+    this.setState({
+      syncUnderOrgVisible: false,
+    });
   }
 
   render() { 
@@ -173,7 +277,19 @@ class WikiSettingHome extends Component {
         render: (record) => { 
           let editDom = null;
           let deletDom = null;
-          if (record.resourceType !== 'organization') { 
+          let syncDom = null;
+          let orgSyncDom = null;
+          if (record.resourceType === 'organization') {
+            if (record.status === 'failed') {
+              syncDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncOrgShowModal}>
+                      <span className="icon icon-sync" />
+                    </Button>
+                  </Tooltip>}
+              </React.Fragment>);
+            }
+          } else { 
             switch (record.status) {
               case 'operating':
                 editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
@@ -188,6 +304,13 @@ class WikiSettingHome extends Component {
                 </Tooltip>);
                 break;
               case 'failed':
+                orgSyncDom = (<React.Fragment>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderOrgShowModal}>
+                      <span className="icon icon-sync" />
+                    </Button>
+                  </Tooltip>}
+                </React.Fragment>);
                 editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.failed'} />}>
                   <Button shape="circle" size={'small'} funcType="flat">
                     <span className="icon icon-mode_edit c7n-app-icon-disabled" />
@@ -221,6 +344,22 @@ class WikiSettingHome extends Component {
           }
           return (<div>
             <Permission
+              service={['wiki-service.wiki-organization-space.sync']}
+              type={type}
+              projectId={projectId}
+              organizationId={orgId}
+            >
+              {orgSyncDom}
+            </Permission>
+            <Permission
+              service={['wiki-service.wiki-scanning.syncOrg']}
+              type={type}
+              projectId={projectId}
+              organizationId={orgId}
+            >
+              {syncDom}
+            </Permission>
+            <Permission
               service={['wiki-service.wiki-organization-space.update']}
               type={type}
               projectId={projectId}
@@ -248,6 +387,8 @@ class WikiSettingHome extends Component {
           'wiki-service.wiki-organization-space.update',
           'wiki-service.wiki-organization-space.checkName',
           'wiki-service.wiki-organization-space.delete',
+          'wiki-service.wiki-organization-space.sync',
+          'wiki-service.wiki-scanning.syncOrg',
         ]}
         className="c7n-wiki"
        > 
@@ -261,6 +402,17 @@ class WikiSettingHome extends Component {
           <Button funcType="flat" onClick={() => this.setState({ createComponentShow: true })}>
             <Icon type="playlist_add icon" />
             <span><FormattedMessage id={'wiki.create.space'} /></span>
+          </Button>
+        </Permission>
+        <Permission
+              service={['wiki-service.wiki-organization-space.sync']}
+              type={type}
+              projectId={projectId}
+              organizationId={orgId}
+            >
+          <Button funcType="flat" onClick={this.syncShowModal}>
+            <Icon type="sync icon" />
+            <span><FormattedMessage id={'sync'} /></span>
           </Button>
         </Permission>
         <Permission
@@ -330,6 +482,36 @@ class WikiSettingHome extends Component {
           ]}
           > 
           <p><FormattedMessage id={'wiki.delete.tooltip'} />？</p>
+        </Modal> 
+        <Modal
+          closable={false}
+          title={<FormattedMessage id={'wiki.sync.space'} />}
+          visible={this.state.syncVisible}
+          onOk={this.handleOk}
+          confirmLoading={this.state.syncLoading}
+          onCancel={this.handleCancel}
+        >
+          <p><FormattedMessage id={'wiki.sync.tooltip'} />？</p>
+        </Modal>
+        <Modal
+          closable={false}
+          title={<FormattedMessage id={'wiki.sync.space'} />}
+          visible={this.state.syncOrgVisible}
+          onOk={this.orgHandleOk}
+          confirmLoading={this.state.syncOrgLoading}
+          onCancel={this.orgHandleCancel}
+        >
+          <p><FormattedMessage id={'wiki.sync.org.tooltip'} />？</p>
+        </Modal>
+        <Modal
+          closable={false}
+          title={<FormattedMessage id={'wiki.sync.space'} />}
+          visible={this.state.syncUnderOrgVisible}
+          onOk={this.underOrgHandleOk}
+          confirmLoading={this.state.syncUnderOrgLoading}
+          onCancel={this.underOrgHandleCancel}
+        >
+          <p><FormattedMessage id={'wiki.sync.under.org.tooltip'} />？</p>
         </Modal>
         </Content>
       </Page>

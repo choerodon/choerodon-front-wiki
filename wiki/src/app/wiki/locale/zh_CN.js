@@ -21,6 +21,7 @@ const zh_CN = {
     delete:'删除',
     cancel: '取消',
     required: '该字段是必输的',
+    sync: '同步',
 
     "learnmore": "了解更多", // 必须有这个字段
     'global.menusetting.icon': '空间图标',
@@ -45,6 +46,12 @@ const zh_CN = {
     'wiki.failed': '不可编辑',
     'wiki.delete.space': '删除空间',
     'wiki.delete.tooltip': '您确定要将此空间删除吗',
+    'wiki.sync.space' : '同步空间',
+    'wiki.sync.tooltip' : '同步该组织和组织下项目对应的空间',
+    'wiki.sync.org.tooltip' : '同步组织对应的空间',
+    'wiki.sync.project.tooltip' : '同步项目对应的空间',
+    'wiki.sync.under.org.tooltip' : '同步组织下的空间',
+    'wiki.sync.under.project.tooltip' : '同步项目下的空间',
   
    ...pageDetail,
 };

@@ -11,6 +11,7 @@ const enUS = {
     delete:'删除', 
     cancel: 'cancel',
     required: 'This field is mandatory',
+    sync: 'synchronous',
 
     //space
     'global.menusetting.icon': 'space icon',
@@ -33,6 +34,12 @@ const enUS = {
     'wiki.failed': 'Do not edit',
     'wiki.delete.space': 'Delete space',
     'wiki.delete.tooltip': 'Are you sure you want to delete this space',
+    'wiki.sync.space' : 'Synchronous space',
+    'wiki.sync.tooltip' : 'Synchronize the space corresponding to the project under the organization and organization',
+    'wiki.sync.org.tooltip' : 'Synchronize the space corresponding to the organization',
+    'wiki.sync.project.tooltip' : 'Synchronize the space corresponding to the project',
+    'wiki.sync.under.org.tooltip' : 'Synchronize the space under the organization',
+    'wiki.sync.under.project.tooltip' : 'Synchronize space under the project',
 };
   export default enUS;
   
