@@ -126,6 +126,7 @@ class WikiSettingHome extends Component {
       if(res){
         this.setState({
           syncVisible: false,
+          syncLoading: false,
         });
         this.loadComponents();
       } else {
@@ -159,6 +160,7 @@ class WikiSettingHome extends Component {
       if(res){
         this.setState({
           syncOrgVisible: false,
+          syncOrgLoading: false,
         });
         this.loadComponents();
       } else {
@@ -192,6 +194,7 @@ class WikiSettingHome extends Component {
       if(res){
         this.setState({
           syncUnderOrgVisible: false,
+          syncUnderOrgLoading: false,
         });
         this.loadComponents();
       } else {
@@ -404,7 +407,7 @@ class WikiSettingHome extends Component {
             <span><FormattedMessage id={'wiki.create.space'} /></span>
           </Button>
         </Permission>
-        <Permission
+        {this.state.components.length === 0?<Permission
               service={['wiki-service.wiki-organization-space.sync']}
               type={type}
               projectId={projectId}
@@ -414,7 +417,7 @@ class WikiSettingHome extends Component {
             <Icon type="sync icon" />
             <span><FormattedMessage id={'sync'} /></span>
           </Button>
-        </Permission>
+        </Permission>:null}
         <Permission
               service={['wiki-service.wiki-organization-space.pageByOptions']}
               type={type}

@@ -123,6 +123,7 @@ class WikiSettingHome extends Component {
       if(res){
         this.setState({
           syncProjectVisible: false,
+          syncProjectLoading: false,
         });
         this.loadComponents();
       } else {
@@ -156,6 +157,7 @@ class WikiSettingHome extends Component {
       if(res){
         this.setState({
           syncUnderProjectVisible: false,
+          syncUnderProjectLoading: false,
         });
         this.loadComponents();
       } else {
