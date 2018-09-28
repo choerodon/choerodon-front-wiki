@@ -160,13 +160,20 @@ class WikiSettingHome extends Component {
           syncUnderProjectVisible: false,
           syncUnderProjectLoading: false,
         });
-        this.loadComponents();
       } else {
         this.setState({
           syncUnderProjectVisible: false,
           syncUnderProjectLoading: false,
         });
       }
+      this.loadComponents();
+    })
+    .catch((error) => {
+      this.setState({
+        syncUnderOrgVisible: false,
+        syncUnderOrgLoading: false,
+      });
+      Choerodon.prompt(Choerodon.getMessage('同步空间失败', 'Synchronization space failed'));
     });
   }
 
@@ -252,7 +259,7 @@ class WikiSettingHome extends Component {
           if (record.resourceType === 'project') {
             if (record.status === 'failed') {
               syncDom = (<React.Fragment>
-                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
                     <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncProjectShowModal}>
                       <span className="icon icon-sync" />
                     </Button>
@@ -275,7 +282,7 @@ class WikiSettingHome extends Component {
                 break;
               case 'failed':
                 projectSyncDom = (<React.Fragment>
-                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
                     <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderProjectShowModal.bind(this, record)}>
                       <span className="icon icon-sync" />
                     </Button>

@@ -21,7 +21,8 @@ const zh_CN = {
     delete:'删除',
     cancel: '取消',
     required: '该字段是必输的',
-    sync: '重试',
+    sync: '同步',
+    retry: '重试',
 
     "learnmore": "了解更多", // 必须有这个字段
     'global.menusetting.icon': '空间图标',
@@ -52,6 +53,7 @@ const zh_CN = {
     'wiki.sync.project.tooltip' : '同步项目对应的空间',
     'wiki.sync.under.org.tooltip' : '同步组织下的空间',
     'wiki.sync.under.project.tooltip' : '同步项目下的空间',
+    'wiki.sync.space.error' : '同步空间失败',
   
    ...pageDetail,
 };
