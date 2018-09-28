@@ -141,9 +141,10 @@ class WikiSettingHome extends Component {
     });
   }
 
-  syncUnderProjectShowModal = () => {
+  syncUnderProjectShowModal = (record) => {
     this.setState({
       syncUnderProjectVisible: true,
+      currentComponentId: record.id,
     });
   }
 
@@ -275,7 +276,7 @@ class WikiSettingHome extends Component {
               case 'failed':
                 projectSyncDom = (<React.Fragment>
                   {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
-                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderProjectShowModal}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderProjectShowModal.bind(this, record)}>
                       <span className="icon icon-sync" />
                     </Button>
                   </Tooltip>}

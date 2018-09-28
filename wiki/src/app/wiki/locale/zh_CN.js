@@ -21,7 +21,7 @@ const zh_CN = {
     delete:'删除',
     cancel: '取消',
     required: '该字段是必输的',
-    sync: '同步',
+    sync: '重试',
 
     "learnmore": "了解更多", // 必须有这个字段
     'global.menusetting.icon': '空间图标',

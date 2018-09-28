@@ -11,7 +11,7 @@ const enUS = {
     delete:'删除', 
     cancel: 'cancel',
     required: 'This field is mandatory',
-    sync: 'synchronous',
+    sync: 'retry',
 
     //space
     'global.menusetting.icon': 'space icon',
