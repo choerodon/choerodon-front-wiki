@@ -1,11 +1,11 @@
 // zh_CN.js
 // 文档地址前缀
-const docServer = 'http://v0-7.choerodon.io/zh/docs';
+const docServer = 'http://choerodon.io';
 // 界面标题描述统一管理
 const pageDetail = {
     'wiki.title':'Wiki简介',
     'wiki.description':'Wiki是为项目和组织提供知识管理和共享的平台。',
-    'wiki.link':`${docServer}/user-guide/wiki/space/create-space/`,
+    'wiki.link':`${docServer}/zh/docs/user-guide/wiki/space/`,
 };
 
 const zh_CN = {

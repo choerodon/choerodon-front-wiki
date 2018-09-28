@@ -188,7 +188,7 @@ class WikiSettingHome extends Component {
     this.setState({
       syncUnderOrgLoading: true,
     });
-    axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync/{id}`)
+    axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync/${this.state.currentComponentId}`)
     .then((datas) => {
       const res = this.handleProptError(datas);
       if(res){
