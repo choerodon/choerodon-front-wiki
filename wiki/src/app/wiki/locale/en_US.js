@@ -11,7 +11,8 @@ const enUS = {
     delete:'删除', 
     cancel: 'cancel',
     required: 'This field is mandatory',
-    sync: 'synchronous',
+    sync: 'synchronization',
+    retry: 'retry',
 
     //space
     'global.menusetting.icon': 'space icon',
@@ -40,6 +41,7 @@ const enUS = {
     'wiki.sync.project.tooltip' : 'Synchronize the space corresponding to the project',
     'wiki.sync.under.org.tooltip' : 'Synchronize the space under the organization',
     'wiki.sync.under.project.tooltip' : 'Synchronize space under the project',
+    'wiki.sync.space.error' : 'Synchronization space failed',
 };
   export default enUS;
   

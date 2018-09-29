@@ -121,7 +121,7 @@ class WikiSettingHome extends Component {
       syncLoading: true,
     });
     axios.get(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync`)
-    .then((datas) => {
+    .then((datas) => { 
       const res = this.handleProptError(datas);
       if(res){
         this.setState({
@@ -178,9 +178,10 @@ class WikiSettingHome extends Component {
     });
   }
 
-  syncUnderOrgShowModal = () => {
+  syncUnderOrgShowModal = (record) => {
     this.setState({
       syncUnderOrgVisible: true,
+      currentComponentId: record.id,
     });
   }
 
@@ -188,7 +189,7 @@ class WikiSettingHome extends Component {
     this.setState({
       syncUnderOrgLoading: true,
     });
-    axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync/{id}`)
+    axios.put(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space/sync/${this.state.currentComponentId}`)
     .then((datas) => {
       const res = this.handleProptError(datas);
       if(res){
@@ -196,13 +197,20 @@ class WikiSettingHome extends Component {
           syncUnderOrgVisible: false,
           syncUnderOrgLoading: false,
         });
-        this.loadComponents();
       } else {
         this.setState({
           syncUnderOrgVisible: false,
           syncUnderOrgLoading: false,
         });
       }
+      this.loadComponents();
+    })
+    .catch((error) => {
+      this.setState({
+        syncUnderOrgVisible: false,
+        syncUnderOrgLoading: false,
+      });
+      Choerodon.prompt(Choerodon.getMessage('同步空间失败', 'Synchronization space failed'));
     });
   }
 
@@ -285,7 +293,7 @@ class WikiSettingHome extends Component {
           if (record.resourceType === 'organization') {
             if (record.status === 'failed') {
               syncDom = (<React.Fragment>
-                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
                     <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncOrgShowModal}>
                       <span className="icon icon-sync" />
                     </Button>
@@ -308,8 +316,8 @@ class WikiSettingHome extends Component {
                 break;
               case 'failed':
                 orgSyncDom = (<React.Fragment>
-                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'sync'} />}>
-                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderOrgShowModal}>
+                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
+                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncUnderOrgShowModal.bind(this, record)}>
                       <span className="icon icon-sync" />
                     </Button>
                   </Tooltip>}
@@ -430,10 +438,9 @@ class WikiSettingHome extends Component {
           </Button>
         </Permission>
         </Header>
-        <Content
+        <Content code="wiki" value={<FormattedMessage id={'wiki.link'} />}
           title={<FormattedMessage id={'wiki.title'} />}
           description={<FormattedMessage id={'wiki.description'} />}
-          link={<FormattedMessage id={'wiki.link'} />}
         >
           <Spin spinning={this.state.loading}>
             <Table
