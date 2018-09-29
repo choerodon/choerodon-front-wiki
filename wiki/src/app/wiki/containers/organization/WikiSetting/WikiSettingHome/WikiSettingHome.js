@@ -438,10 +438,9 @@ class WikiSettingHome extends Component {
           </Button>
         </Permission>
         </Header>
-        <Content
+        <Content code="wiki" value={<FormattedMessage id={'wiki.link'} />}
           title={<FormattedMessage id={'wiki.title'} />}
           description={<FormattedMessage id={'wiki.description'} />}
-          link={<FormattedMessage id={'wiki.link'} />}
         >
           <Spin spinning={this.state.loading}>
             <Table
