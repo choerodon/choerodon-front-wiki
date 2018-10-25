@@ -1,4 +1,17 @@
 # 组织设置
+"rentsetting":
+  icon: IAM
+  sort: 2
+  organization: # 组织层的菜单
+    - "wiki-management": # 菜单字段
+        icon: book  # 菜单图标
+        Routes: /wiki/organization/wikisetting # 菜单对应路由
+        sort: 7 # 菜单的次序
+        delete: true
+        permission: # 菜单内容具有的权限
+          - 'wiki-service.wiki-organization-space.pageByOptions'
+
+
 "organization-wiki-management":
   icon: settings
   sort: 7
@@ -34,6 +47,23 @@
           - 'wiki-service.wiki-project-space.update'
           - 'wiki-service.wiki-project-space.delete'
           - 'wiki-service.wiki-project-space.sync'
+
+"prosetting":
+  icon: IAM
+  sort: 5
+  project:
+    - "wiki-management":
+        icon: book
+        Routes: /wiki/project/wikisetting 
+        sort: 3
+        delete: true
+        permission:
+          - 'wiki-service.wiki-project-space.create'
+          - 'wiki-service.wiki-project-space.checkName'
+          - 'wiki-service.wiki-project-space.pageByOptions'
+          - 'wiki-service.wiki-project-space.query'
+          - 'wiki-service.wiki-project-space.update'
+
 
   # site: # site层的菜单
   # user: # 个人中心层的菜单
