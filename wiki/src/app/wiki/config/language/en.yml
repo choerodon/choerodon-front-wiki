@@ -1,13 +1,14 @@
-"rentsetting": “Organization settings”
-"prosetting": "Project Manage"
+"organization-wiki-management": "Wiki management"
+"project-wiki-management": "Wiki management"
+
 # site
 # organization
-"rentsetting.wiki-management": "Wiki management"
+"organization-wiki-management.space": "Wiki space"
 "global.menusetting.icon": "space icon"
 
 
 # project
-"prosetting.wiki-management": "Wiki management"
+"project-wiki-management.space": "Wiki space"
 
 # user
 
