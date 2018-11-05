@@ -28,6 +28,7 @@
           - 'wiki-service.wiki-organization-space.checkName'
           - 'wiki-service.wiki-organization-space.delete'
           - 'wiki-service.wiki-organization-space.sync'
+          - 'wiki-service.wiki-organization-space.under'
 
 
 # 项目设置
@@ -47,6 +48,7 @@
           - 'wiki-service.wiki-project-space.update'
           - 'wiki-service.wiki-project-space.delete'
           - 'wiki-service.wiki-project-space.sync'
+          - 'wiki-service.wiki-project-space.under'
 
 "prosetting":
   icon: IAM

@@ -1,8 +1,14 @@
 dashboard:
+  - code: "orgwiki"
+    icon: donut_small
+    title: "Wiki空间"
+    description: "Wiki空间"
+    level: organization
+    sort: 3
   - code: "wiki"
     icon: donut_small
     title: "Wiki空间"
     description: "Wiki空间"
     level: project
-    sort: 1
+    sort: 5
 
