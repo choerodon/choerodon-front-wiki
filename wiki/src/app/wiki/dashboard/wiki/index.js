@@ -62,7 +62,7 @@ export default class Announcement extends Component {
       return (
         <div className="loading-wrap">
           <EmptyBlockDashboard
-            des="当前项目下没有创建wiki空间"
+            des="当前项目下没有创建的wiki空间"
           />
         </div>
       );
@@ -76,7 +76,7 @@ export default class Announcement extends Component {
     );
   }
 
-  render() {
+  render() { 
     const { components } = this.state;
     const { history } = this.props;
     const urlParams = AppState.currentMenuType;
@@ -86,7 +86,7 @@ export default class Announcement extends Component {
         <DashBoardNavBar>
         <Link
           role="none"
-          to = {`/wiki/space?type=${urlParams.type}&id=${urlParams.id}&name=${encodeURIComponent(urlParams.name)}&organizationId=${urlParams.organizationId}`}
+          to = {`/wiki/project/space?type=${urlParams.type}&id=${urlParams.id}&name=${encodeURIComponent(urlParams.name)}&organizationId=${urlParams.organizationId}`}
         >
           {'转至Wiki管理'}
         </Link>
