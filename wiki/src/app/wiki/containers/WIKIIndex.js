@@ -14,8 +14,8 @@ class WIKIIndex extends React.Component {
         return (
             <IntlProviderAsync>
             <Switch>
-                <Route path={`${match.url}/space`} component={OrganizationWikiSetting} />
-                <Route path={`${match.url}/space`} component={ProjectWikiSetting} />
+                <Route path={`${match.url}/organization/space`} component={OrganizationWikiSetting} />
+                <Route path={`${match.url}/project/space`} component={ProjectWikiSetting} />
                 <Route path={'*'} component={nomatch} />
             </Switch>
             </IntlProviderAsync>

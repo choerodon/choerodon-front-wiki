@@ -18,7 +18,7 @@
   organization: # 组织层的菜单
     - "space": # 菜单字段
         icon: book  # 菜单图标
-        Routes: /wiki/space # 菜单对应路由
+        Routes: /wiki/organization/space # 菜单对应路由
         sort: 1 # 菜单的次序
         permission: # 菜单内容具有的权限
           - 'wiki-service.wiki-organization-space.pageByOptions'
@@ -38,7 +38,7 @@
   project:
     - "space":
         icon: book
-        Routes: /wiki/space
+        Routes: /wiki/project/space
         sort: 1
         permission:
           - 'wiki-service.wiki-project-space.create'

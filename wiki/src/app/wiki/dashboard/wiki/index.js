@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Spin, Icon, Tooltip } from 'choerodon-ui';
-import { DashBoardNavBar } from 'choerodon-front-boot';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import { DashBoardNavBar, stores, axios } from 'choerodon-front-boot';
+import EmptyBlockDashboard from '../../components/EmptyBlockDashboard';
 import './index.scss';
 
 const { AppState } = stores;
@@ -24,7 +26,7 @@ export default class Announcement extends Component {
     axios.get(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/under`)
       .then((res) => {
         this.setState({
-          components: res,
+          components: res.slice(0,6),
           loading: false,
         });
       });
@@ -32,12 +34,15 @@ export default class Announcement extends Component {
 
   renderSpaces(space) {
     return (
-      <div className="list" key={space.id}>
+      <div className="list" key={space.id} >
+        <div className="wiki-dashboard-space-icon">
+          <Icon type={space.icon} />
+        </div>
         <div className="spaceSummary-wrap">
           <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={space.name}>
-            <p className="spaceSummary text-overflow-hidden">
+            <a  href={space.path} target="_blank" className="spaceSummary text-overflow-hidden">
               {space.name}
-            </p>
+            </a>
           </Tooltip>
         </div>
       </div>
@@ -53,6 +58,15 @@ export default class Announcement extends Component {
         </div>
       );
     }
+    if (components && !components.length) {
+      return (
+        <div className="loading-wrap">
+          <EmptyBlockDashboard
+            des="当前项目下没有创建wiki空间"
+          />
+        </div>
+      );
+    }
     return (
       <div className="lists">
         {
@@ -64,13 +78,20 @@ export default class Announcement extends Component {
 
   render() {
     const { components } = this.state;
+    const { history } = this.props;
+    const urlParams = AppState.currentMenuType;
     return (
-      <div className="c7n-wiki-dashboard-under-project-space">
+      <div className="c7n-wiki-dashboard-under-organization-space">
         {this.renderContent()}
         <DashBoardNavBar>
-          <a target="choerodon" href="http://choerodon.io/zh/docs/user-guide/wiki/">{Choerodon.getMessage('转至Wiki管理', 'go to Wiki management')}</a>
-        </DashBoardNavBar>
+        <Link
+          role="none"
+          to = {`/wiki/space?type=${urlParams.type}&id=${urlParams.id}&name=${encodeURIComponent(urlParams.name)}&organizationId=${urlParams.organizationId}`}
+        >
+          {'转至Wiki管理'}
+        </Link>
+      </DashBoardNavBar>
       </div>
-    );
+    ); 
   }
 }
