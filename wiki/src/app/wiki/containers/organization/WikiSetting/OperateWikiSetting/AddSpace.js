@@ -57,20 +57,37 @@ class AddSpace extends Component {
         };
         this.setState({ createLoading: true });
         axios.post(`/wiki/v1/organizations/${AppState.currentMenuType.organizationId}/space`, component)
-          .then((res) => {
+          .then((datas) => {
+            const res = this.handleProptError(datas);
+            if(res){
             this.setState({
               createLoading: false,
             });
             this.props.onOk();
+          } else {
+            this.setState({
+              createLoading: false,
+            });
+            this.props.onOk();
+          }
           })
           .catch((error) => {
             this.setState({
               createLoading: false,
             });
-            message.error(intl.formatMessage({ id: 'wiki.create.space.error' }));
+            Choerodon.prompt(Choerodon.getMessage('创建空间失败!', 'Failed to create space!'));
           });
       }
     });
+  }
+
+  handleProptError =(error) => {
+    if (error && error.failed) {
+      Choerodon.prompt(error.message);
+      return false;
+    } else { 
+      return true;
+    }
   }
 
   render() {
