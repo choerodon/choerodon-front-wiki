@@ -70,20 +70,40 @@ class EditSpace extends Component {
         };
         this.setState({ createLoading: true });
         axios.put(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/${component.id}`, component)
-          .then((res) => {
-            this.setState({
-              createLoading: false,
-            });
-            this.props.onOk();
+          .then((datas) => {
+            const res = this.handleProptError(datas);
+            if(res){
+              this.setState({
+                createLoading: false,
+              });
+              this.props.onOk();
+            } else {
+              this.setState({
+                createLoading: false,
+              });
+              this.props.onOk();
+            }
           })
           .catch((error) => {
             this.setState({
               createLoading: false,
             });
-            message.error(intl.formatMessage({ id: 'wiki.edit.space.error' }));
+            this.setState({
+              createLoading: false,
+            });
+            Choerodon.prompt(Choerodon.getMessage('修改空间失败!', 'Modify space failed!'));
           });
       }
     });
+  }
+
+  handleProptError =(error) => {
+    if (error && error.failed) {
+      Choerodon.prompt(error.message);
+      return false;
+    } else { 
+      return true;
+    }
   }
 
   render() {
