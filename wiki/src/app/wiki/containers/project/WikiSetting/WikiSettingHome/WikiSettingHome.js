@@ -14,6 +14,8 @@ const { AppState } = stores;
 class WikiSettingHome extends Component {
   constructor(props) {
     super(props);
+    const Request = this.GetRequest(this.props.location.search);
+    const { createSpace } = Request;
     this.state = {
       components: [],
       component: {},
@@ -21,7 +23,7 @@ class WikiSettingHome extends Component {
       loading: false,
       confirmShow: false,
       editComponentShow: false,
-      createComponentShow: false,
+      createComponentShow: createSpace?true:false,
       openRemove: false, 
       syncProjectVisible: false,
       syncProjectLoading: false,
@@ -29,6 +31,18 @@ class WikiSettingHome extends Component {
       syncUnderProjectLoading: false,
     };
   }
+
+  GetRequest(url) {
+    const theRequest = {};
+    if (url.indexOf('?') !== -1) {
+    const str = url.split('?')[1];
+    const strs = str.split('&');
+    for (let i = 0; i < strs.length; i += 1) {
+    theRequest[strs[i].split('=')[0]] = decodeURI(strs[i].split('=')[1]);
+    }
+    }
+    return theRequest;
+    }
   
   componentDidMount() {
     this.loadComponents();

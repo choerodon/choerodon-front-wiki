@@ -51,6 +51,8 @@ export default class Announcement extends Component {
 
   renderContent() {
     const { loading, components } = this.state;
+    const { history } = this.props;
+    const urlParams = AppState.currentMenuType;
     if (loading) {
       return (
         <div className="loading-wrap">
@@ -61,9 +63,12 @@ export default class Announcement extends Component {
     if (components && !components.length) {
       return (
         <div className="loading-wrap">
-          <EmptyBlockDashboard
-            des="当前组织下没有创建的wiki空间"
-          />
+              <Link
+              role="none"
+              to = {`/wiki/organization/space?type=${urlParams.type}&id=${urlParams.id}&name=${encodeURIComponent(urlParams.name)}&organizationId=${urlParams.organizationId}&createSpace=true`}
+            >
+              {'快速创建wiki空间'}
+            </Link>
         </div>
       );
     }
