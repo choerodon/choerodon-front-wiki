@@ -5,10 +5,19 @@ dashboard:
     description: "Wiki空间"
     level: organization
     sort: 3
+    position:
+        positionX: 4
+        positionY: 0
+        width: 4
+        height: 4
   - code: "wiki"
     icon: donut_small
     title: "Wiki空间"
     description: "Wiki空间"
     level: project
     sort: 5
-
+    position:
+        positionX: 0
+        positionY: 4
+        width: 4
+        height: 4
