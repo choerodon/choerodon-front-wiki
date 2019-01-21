@@ -138,7 +138,7 @@ class AddSpace extends Component {
                   validator: this.checkName,
                 }]
               })(
-                <Input label={<FormattedMessage id={'wiki.space.name'} />} maxLength={15} />,
+                <Input label={<FormattedMessage id={'wiki.space.name'} />} maxLength={30} />,
               )}
             </FormItem>
           </Form>
