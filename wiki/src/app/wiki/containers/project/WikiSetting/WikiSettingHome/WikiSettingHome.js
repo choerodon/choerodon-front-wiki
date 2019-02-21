@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Table, Spin,Form, Popover, Tooltip, Icon, Modal } from 'choerodon-ui';
-import {Permission, Page, Header, Content, stores, axios } from 'choerodon-front-boot';
-import './WikiSettingHome.scss'; 
+import { Button, Table, Spin, Form, Popover, Tooltip, Icon, Modal } from 'choerodon-ui';
+import { Permission, Page, Header, Content, stores, axios } from 'choerodon-front-boot';
+import './WikiSettingHome.scss';
 import CreateSpace from '../OperateWikiSetting/AddSpace';
 import EditSpace from '../OperateWikiSetting/EditSpace';
-
+import SmartTooltip from '../../../../components/SmartTooltip';
 const { AppState } = stores;
-
+const TextOverFlowStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+}
 @observer
 class WikiSettingHome extends Component {
   constructor(props) {
@@ -23,8 +27,8 @@ class WikiSettingHome extends Component {
       loading: false,
       confirmShow: false,
       editComponentShow: false,
-      createComponentShow: createSpace?true:false,
-      openRemove: false, 
+      createComponentShow: createSpace ? true : false,
+      openRemove: false,
       syncProjectVisible: false,
       syncProjectLoading: false,
       syncUnderProjectVisible: false,
@@ -35,15 +39,15 @@ class WikiSettingHome extends Component {
   GetRequest(url) {
     const theRequest = {};
     if (url.indexOf('?') !== -1) {
-    const str = url.split('?')[1];
-    const strs = str.split('&');
-    for (let i = 0; i < strs.length; i += 1) {
-    theRequest[strs[i].split('=')[0]] = decodeURI(strs[i].split('=')[1]);
-    }
+      const str = url.split('?')[1];
+      const strs = str.split('&');
+      for (let i = 0; i < strs.length; i += 1) {
+        theRequest[strs[i].split('=')[0]] = decodeURI(strs[i].split('=')[1]);
+      }
     }
     return theRequest;
-    }
-  
+  }
+
   componentDidMount() {
     this.loadComponents();
     window.console.log(AppState.currentMenuType);
@@ -56,7 +60,7 @@ class WikiSettingHome extends Component {
     });
   }
 
-  openRemove=(record)=> {
+  openRemove = (record) => {
     this.setState({
       openRemove: true,
       currentComponentId: record.id,
@@ -65,30 +69,30 @@ class WikiSettingHome extends Component {
 
   closeRemove = () => {
     this.setState({ openRemove: false });
-  } 
+  }
 
-  handleDelete = () => { 
+  handleDelete = () => {
     this.setState({
       confirmShow: true,
     });
     axios.delete(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/${this.state.currentComponentId}`)
-    .then((datas) => {
-      const res = this.handleProptError(datas);
-      if(res){
-        this.setState({
-          openRemove: false,
-          confirmShow: false,
-        });
-        this.loadComponents();
-      }
-    });
+      .then((datas) => {
+        const res = this.handleProptError(datas);
+        if (res) {
+          this.setState({
+            openRemove: false,
+            confirmShow: false,
+          });
+          this.loadComponents();
+        }
+      });
   }
 
-  handleProptError =(error) => {
+  handleProptError = (error) => {
     if (error && error.failed) {
       Choerodon.prompt(error.message);
       return false;
-    } else { 
+    } else {
       return true;
     }
   }
@@ -96,10 +100,10 @@ class WikiSettingHome extends Component {
   getLastName(path) {
     const arrlen = path.split('/');
     var backstr = "";
-    for(var a=5;a<arrlen.length;a++){
-      backstr = backstr+arrlen[a];
-      if(a!=arrlen.length-1){
-        backstr = backstr+"/";
+    for (var a = 5; a < arrlen.length; a++) {
+      backstr = backstr + arrlen[a];
+      if (a != arrlen.length - 1) {
+        backstr = backstr + "/";
       }
     }
     return backstr;
@@ -132,21 +136,21 @@ class WikiSettingHome extends Component {
       syncProjectLoading: true,
     });
     axios.get(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/sync_project`)
-    .then((datas) => {
-      const res = this.handleProptError(datas);
-      if(res){
-        this.setState({
-          syncProjectVisible: false,
-          syncProjectLoading: false,
-        });
-        this.loadComponents();
-      } else {
-        this.setState({
-          syncProjectVisible: false,
-          syncProjectLoading: false,
-        });
-      }
-    });
+      .then((datas) => {
+        const res = this.handleProptError(datas);
+        if (res) {
+          this.setState({
+            syncProjectVisible: false,
+            syncProjectLoading: false,
+          });
+          this.loadComponents();
+        } else {
+          this.setState({
+            syncProjectVisible: false,
+            syncProjectLoading: false,
+          });
+        }
+      });
   }
 
   projectHandleCancel = () => {
@@ -167,28 +171,28 @@ class WikiSettingHome extends Component {
       syncUnderProjectLoading: true,
     });
     axios.put(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space/sync/${this.state.currentComponentId}`)
-    .then((datas) => {
-      const res = this.handleProptError(datas);
-      if(res){
+      .then((datas) => {
+        const res = this.handleProptError(datas);
+        if (res) {
+          this.setState({
+            syncUnderProjectVisible: false,
+            syncUnderProjectLoading: false,
+          });
+        } else {
+          this.setState({
+            syncUnderProjectVisible: false,
+            syncUnderProjectLoading: false,
+          });
+        }
+        this.loadComponents();
+      })
+      .catch((error) => {
         this.setState({
-          syncUnderProjectVisible: false,
-          syncUnderProjectLoading: false,
+          syncUnderOrgVisible: false,
+          syncUnderOrgLoading: false,
         });
-      } else {
-        this.setState({
-          syncUnderProjectVisible: false,
-          syncUnderProjectLoading: false,
-        });
-      }
-      this.loadComponents();
-    })
-    .catch((error) => {
-      this.setState({
-        syncUnderOrgVisible: false,
-        syncUnderOrgLoading: false,
+        Choerodon.prompt(Choerodon.getMessage('同步空间失败', 'Synchronization space failed'));
       });
-      Choerodon.prompt(Choerodon.getMessage('同步空间失败', 'Synchronization space failed'));
-    });
   }
 
   underProjectHandleCancel = () => {
@@ -198,7 +202,7 @@ class WikiSettingHome extends Component {
   }
 
 
-  render() { 
+  render() {
     const menu = AppState.currentMenuType;
     const projectName = menu.name;
     const { type, id: projectId, organizationId: orgId } = menu;
@@ -207,9 +211,14 @@ class WikiSettingHome extends Component {
         title: <FormattedMessage id={'wiki.column.name'} />,
         dataIndex: 'name',
         key: 'name',
+        className: 'name-column',
         render: (text, record) => {
           return (
-            <span><Icon type={record.icon} style={{ verticalAlign: 'text-bottom' }} /> {record.name}</span>
+            <div style={{ overflow: 'hidden', display: 'flex' }}><Icon type={record.icon} style={{ marginRight: 5 }} />
+              <SmartTooltip>
+                {record.name}
+              </SmartTooltip>
+            </div>
           );
         },
       },
@@ -218,10 +227,10 @@ class WikiSettingHome extends Component {
         key: 'path',
         // width: '15%',
         render: (test, record) => (
-          <div style={{ width: '100%', overflow: 'hidden' }}>
+          <div style={{ width: '100%', ...TextOverFlowStyle }}>
             <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={record.path}>
-              <a href={record.path} target="_blank" style={{dispaly: record.status === 'success' ? 'block' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
-              ../{this.getLastName(record.path)}
+              <a href={record.path} target="_blank" style={{ dispaly: record.status === 'success' ? 'block' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+                ../{this.getLastName(record.path)}
               </a>
             </Tooltip>
           </div>
@@ -248,7 +257,7 @@ class WikiSettingHome extends Component {
               statusDom = (<div className="c7n-wiki-status c7n-wiki-status-deleted">
                 <div>{<FormattedMessage id={'deleted'} />}</div>
               </div>);
-              break; 
+              break;
             case 'failed':
               statusDom = (<div className="c7n-wiki-status c7n-wiki-status-failed">
                 <div>{<FormattedMessage id={'failed'} />}</div>
@@ -273,14 +282,14 @@ class WikiSettingHome extends Component {
           if (record.resourceType === 'project') {
             if (record.status === 'failed') {
               syncDom = (<React.Fragment>
-                  {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
-                    <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncProjectShowModal}>
-                      <span className="icon icon-sync" />
-                    </Button>
-                  </Tooltip>}
+                {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'retry'} />}>
+                  <Button shape="circle" size={'small'} funcType="flat" onClick={this.syncProjectShowModal}>
+                    <span className="icon icon-sync" />
+                  </Button>
+                </Tooltip>}
               </React.Fragment>);
             }
-          } else { 
+          } else {
             switch (record.status) {
               case 'operating':
                 editDom = (<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'wiki.operating'} />}>
@@ -315,8 +324,8 @@ class WikiSettingHome extends Component {
                   </Tooltip>}
                 </React.Fragment>);
                 break;
-                case 'success':
-                editDom = (<React.Fragment> 
+              case 'success':
+                editDom = (<React.Fragment>
                   {<Tooltip trigger="hover" placement="bottom" title={<FormattedMessage id={'editor'} />}>
                     <Button shape="circle" size={'small'} funcType="flat" onClick={this.showComponent.bind(this, record)}>
                       <span className="icon icon-mode_edit" />
@@ -367,11 +376,11 @@ class WikiSettingHome extends Component {
               {deletDom}
             </Permission>
           </div>);
-      },
-    }];
+        },
+      }];
     return (
       <Page
-       service={[
+        service={[
           'wiki-service.wiki-project-space.create',
           'wiki-service.wiki-project-space.pageByOptions',
           'wiki-service.wiki-project-space.query',
@@ -382,30 +391,30 @@ class WikiSettingHome extends Component {
           'wiki-service.wiki-scanning.syncProject',
         ]}
         className="c7n-wiki"
-       > 
+      >
         <Header title={<FormattedMessage id={'wiki.header.title'} />}>
-        <Permission
-              service={['wiki-service.wiki-project-space.create']}
-              type={type}
-              projectId={projectId} 
-              organizationId={orgId}
-            >
-          <Button funcType="flat" onClick={() => this.setState({ createComponentShow: true })}>
-            <Icon type="playlist_add icon" />
-            <span><FormattedMessage id={'wiki.create.space'} /></span>
-          </Button>
-        </Permission>
-        <Permission
-              service={['wiki-service.wiki-project-space.pageByOptions']}
-              type={type}
-              projectId={projectId}
-              organizationId={orgId}
-            >
-          <Button funcType="flat" onClick={() => this.loadComponents()}>
-            <Icon type="autorenew icon" />
-            <span><FormattedMessage id={'refresh'} /></span>
-          </Button>
-        </Permission>
+          <Permission
+            service={['wiki-service.wiki-project-space.create']}
+            type={type}
+            projectId={projectId}
+            organizationId={orgId}
+          >
+            <Button funcType="flat" onClick={() => this.setState({ createComponentShow: true })}>
+              <Icon type="playlist_add icon" />
+              <span><FormattedMessage id={'wiki.create.space'} /></span>
+            </Button>
+          </Permission>
+          <Permission
+            service={['wiki-service.wiki-project-space.pageByOptions']}
+            type={type}
+            projectId={projectId}
+            organizationId={orgId}
+          >
+            <Button funcType="flat" onClick={() => this.loadComponents()}>
+              <Icon type="autorenew icon" />
+              <span><FormattedMessage id={'refresh'} /></span>
+            </Button>
+          </Permission>
         </Header>
         <Content code="wiki" value={<FormattedMessage id={'wiki.link'} />}
           title={<FormattedMessage id={'wiki.title'} />}
@@ -417,7 +426,7 @@ class WikiSettingHome extends Component {
               dataSource={this.state.components}
               scroll={{ x: true }}
               rowKey={record => record.id}
-              defaultExpandAllRows={true}   
+              defaultExpandAllRows={true}
             />
           </Spin>
           {
@@ -450,38 +459,38 @@ class WikiSettingHome extends Component {
             ) : null
           }
           <Modal
-          closable={false}
-          visible={this.state.openRemove}
-          title={<FormattedMessage id={'wiki.delete.space'} />}
-          footer={[
-            <Button key="back" onClick={this.closeRemove}><FormattedMessage id={'cancel'} /></Button>,
-            <Button key="submit" type="danger" loading={this.state.confirmShow}  onClick={this.handleDelete}>
-              <FormattedMessage id={'delete'} />
-            </Button>,
-          ]}
-          > 
-          <p><FormattedMessage id={'wiki.delete.tooltip'} />？</p>
-        </Modal>
-        <Modal
-          closable={false}
-          title={<FormattedMessage id={'wiki.sync.space'} />}
-          visible={this.state.syncProjectVisible}
-          onOk={this.projectHandleOk}
-          confirmLoading={this.state.syncProjectLoading}
-          onCancel={this.projectHandleCancel}
-        >
-          <p><FormattedMessage id={'wiki.sync.project.tooltip'} />？</p>
-        </Modal>
-        <Modal
-          closable={false}
-          title={<FormattedMessage id={'wiki.sync.space'} />}
-          visible={this.state.syncUnderProjectVisible}
-          onOk={this.underProjectHandleOk}
-          confirmLoading={this.state.syncUnderProjectLoading}
-          onCancel={this.underProjectHandleCancel}
-        >
-          <p><FormattedMessage id={'wiki.sync.under.project.tooltip'} />？</p>
-        </Modal>
+            closable={false}
+            visible={this.state.openRemove}
+            title={<FormattedMessage id={'wiki.delete.space'} />}
+            footer={[
+              <Button key="back" onClick={this.closeRemove}><FormattedMessage id={'cancel'} /></Button>,
+              <Button key="submit" type="danger" loading={this.state.confirmShow} onClick={this.handleDelete}>
+                <FormattedMessage id={'delete'} />
+              </Button>,
+            ]}
+          >
+            <p><FormattedMessage id={'wiki.delete.tooltip'} />？</p>
+          </Modal>
+          <Modal
+            closable={false}
+            title={<FormattedMessage id={'wiki.sync.space'} />}
+            visible={this.state.syncProjectVisible}
+            onOk={this.projectHandleOk}
+            confirmLoading={this.state.syncProjectLoading}
+            onCancel={this.projectHandleCancel}
+          >
+            <p><FormattedMessage id={'wiki.sync.project.tooltip'} />？</p>
+          </Modal>
+          <Modal
+            closable={false}
+            title={<FormattedMessage id={'wiki.sync.space'} />}
+            visible={this.state.syncUnderProjectVisible}
+            onOk={this.underProjectHandleOk}
+            confirmLoading={this.state.syncUnderProjectLoading}
+            onCancel={this.underProjectHandleCancel}
+          >
+            <p><FormattedMessage id={'wiki.sync.under.project.tooltip'} />？</p>
+          </Modal>
         </Content>
       </Page>
     );

@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Form, Select, Input, Tooltip, Modal, Popover, IconSelect } from 'choerodon-ui';
-import { stores, Content, axios} from 'choerodon-front-boot';
+import { stores, Content, axios } from 'choerodon-front-boot';
 import './OperateSpace.scss';
 
 
@@ -43,7 +43,7 @@ class AddSpace extends Component {
           callback(intl.formatMessage({ id: 'wiki.name.check.exist' }))
         } else {
           callback()
-        } 
+        }
       });
   }
 
@@ -60,35 +60,35 @@ class AddSpace extends Component {
         };
         this.setState({ createLoading: true });
         axios.post(`/wiki/v1/projects/${AppState.currentMenuType.projectId}/space`, component)
-        .then((datas) => {
-          const res = this.handleProptError(datas);
-          if(res){
-          this.setState({
-            createLoading: false,
+          .then((datas) => {
+            const res = this.handleProptError(datas);
+            if (res) {
+              this.setState({
+                createLoading: false,
+              });
+              this.props.onOk();
+            } else {
+              this.setState({
+                createLoading: false,
+              });
+              this.props.onOk();
+            }
+          })
+          .catch((error) => {
+            this.setState({
+              createLoading: false,
+            });
+            Choerodon.prompt(Choerodon.getMessage('创建空间失败!', 'Failed to create space!'));
           });
-          this.props.onOk();
-        } else {
-          this.setState({
-            createLoading: false,
-          });
-          this.props.onOk();
-        }
-        })
-        .catch((error) => {
-          this.setState({
-            createLoading: false,
-          });
-          Choerodon.prompt(Choerodon.getMessage('创建空间失败!', 'Failed to create space!'));
-        });
       }
     });
   }
 
-  handleProptError =(error) => {
+  handleProptError = (error) => {
     if (error && error.failed) {
       Choerodon.prompt(error.message);
       return false;
-    } else { 
+    } else {
       return true;
     }
   }
@@ -108,14 +108,13 @@ class AddSpace extends Component {
         onCancel={this.props.onCancel.bind(this)}
       >
         <Content
-          style={{ 
+          style={{
             padding: 0,
-            width: 512,
           }}
           title={`在项目"${AppState.currentMenuType.name}"中创建空间`}
           description={<FormattedMessage id={'wiki.create.project.description'} />}
         >
-          <Form>
+          <Form style={{ width: 512 }}>
             <FormItem
               {...formItemLayout}
             >
@@ -130,7 +129,7 @@ class AddSpace extends Component {
                   label={<FormattedMessage id={'wiki.space.icon'} />}
                   style={{ width: inputWidth }}
                 />
-                )}
+              )}
             </FormItem>
             <FormItem>
               {getFieldDecorator('name', {

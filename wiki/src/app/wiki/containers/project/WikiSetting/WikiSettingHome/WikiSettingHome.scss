@@ -1,5 +1,12 @@
 .c7n-wiki {
   background: #fff;
+  td {
+    height: 36px;
+  }
+  .name-column {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .c7n-wiki-status {
@@ -11,7 +18,6 @@
   text-align: center;
   line-height: 16px;
   vertical-align: middle;
-
   div {
     transform: scale(0.8);
   }

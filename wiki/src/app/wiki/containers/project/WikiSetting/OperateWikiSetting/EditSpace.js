@@ -121,13 +121,12 @@ class EditSpace extends Component {
       >
         <Content
           style={{
-            padding: 0,
-            width: 512,
+            padding: 0,           
           }}
           title={`在项目"${AppState.currentMenuType.name}"中查看空间`}
           description={<FormattedMessage id={'wiki.eidt.description'} />}
         >
-          <Form>
+          <Form style={{ width: 512 }}>
             <FormItem
               {...formItemLayout}
             >
