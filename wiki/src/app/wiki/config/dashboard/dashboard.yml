@@ -2,7 +2,7 @@ dashboard:
   - code: "orgwiki"
     icon: donut_small
     title: "Wiki空间"
-    description: "Wiki空间"
+    description: "组织下空间列表"
     level: organization
     sort: 3
     position:
@@ -13,7 +13,7 @@ dashboard:
   - code: "wiki"
     icon: donut_small
     title: "Wiki空间"
-    description: "Wiki空间"
+    description: "项目下空间列表"
     level: project
     sort: 5
     position:
