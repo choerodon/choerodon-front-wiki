@@ -106,13 +106,12 @@ class AddSpace extends Component {
       >
         <Content
           style={{
-            padding: 0,
-            width: 512,
+            padding: 0,           
           }}
           title={`在组织"${AppState.currentMenuType.name}"中创建空间`} 
           description={<FormattedMessage id={'wiki.create.org.description'} />}
         >
-          <Form>
+          <Form style={{ width: 512 }}>
             <FormItem
               {...formItemLayout}
             >
