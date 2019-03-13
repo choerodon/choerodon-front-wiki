@@ -15,8 +15,8 @@ COPY menu.yml /usr/share/nginx/html/menu.yml
 COPY dashboard.yml /usr/share/nginx/html/dashboard.yml
 COPY wiki/node_modules/choerodon-front-boot/structure/menu /usr/share/nginx/html/menu
 COPY wiki/node_modules/choerodon-front-boot/structure/dashboard /usr/share/nginx/html/dashboard
-RUN chmod 777 /usr/share/nginx/html/enterpoint.sh
-ENTRYPOINT ["/usr/share/nginx/html/enterpoint.sh"]
+RUN chmod 777 /usr/share/nginx/html/wiki-enterpoint.sh
+ENTRYPOINT ["/usr/share/nginx/html/wiki-enterpoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 80
