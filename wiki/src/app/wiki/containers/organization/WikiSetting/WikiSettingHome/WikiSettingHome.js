@@ -267,9 +267,15 @@ class WikiSettingHome extends Component {
         render: (test, record) => (
           <div style={{ width: '100%', ...TextOverFlowStyle }}>
             <Tooltip placement="topLeft" mouseEnterDelay={0.5} title={record.path}>
-              <a href={record.path} target="_blank" style={{ dispaly: record.status === 'success' ? 'block' : 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+            {record.status === 'success' ?
+              <a href={record.path} target="_blank" style={{ dispaly:'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
                 ../{this.getLastName(record.path)}
               </a>
+              :
+              <span  style={{ dispaly:'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 0 }}>
+                ../{this.getLastName(record.path)}
+              </span>
+            }
             </Tooltip>
           </div>
         ),
