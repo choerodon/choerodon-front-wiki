@@ -5,13 +5,14 @@
   "main": "src/app/wiki/containers/WIKIIndex.js",
   "scripts": {
     "start": "choerodon-front-boot start --config ../config.js",
-    "build": "choerodon-front-boot build --config ../config.js"
+    "build": "choerodon-front-boot build --config ../config.js",
+    "linux_build": "node --max_old_space_size=2048 node_modules/choerodon-front-boot/bin/choerodon-front-boot-build --config ./config.js"
   },
   "contributors": [
     "choerodon"
   ],
   "license": "ISC",
   "dependencies": {
-    "choerodon-front-boot": "0.10.0"
+    "choerodon-front-boot": "0.10.10"
   }
 }
